@@ -1,4 +1,6 @@
 from book import Book
+from person import Person
+
 
 print("============System zarządzania biblioteką============")
 
@@ -76,9 +78,37 @@ def menu4():
     Book.display_books()
 
 
-def menu5(): print("Dodawanie nowego czytelnika...")
-def menu6(): print("Usuwanie czytelnika...")
-def menu7(): print("Wyszukiwanie czytelnika...")
+people = Person.load()
+def menu5():
+    fname = input("Podaj imie: ")
+    lname = input("Podaj nazwisko: ")
+    address = input("Podaj adres: ")
+    phone = input("Podaj numer telefonu: ")
+    people.append(Person(fname=fname, lname=lname, address=address, phone=phone))
+    Person.save(people)
+def menu6():
+    count = 1
+    for person in people:
+        print(count,  ". ",person.fname, person.lname, person.address, person.phone)
+        count += 1
+    nr = int(input("Usuń czytelnika o numerze: "))
+    del people[nr-1]
+    Person.save(people)
+def menu7():
+    count = 1
+    for person in people:
+        print(count, ". ", person.fname, person.lname, person.address, person.phone)
+        count += 1
+    nr = int(input("Edytuj czytelnika o numerze: "))
+    fname = input("Podaj imie: ")
+    people[nr - 1].fname = fname
+    lname = input("Podaj nazwisko: ")
+    people[nr - 1].lname = lname
+    address = input("Podaj adres: ")
+    people[nr - 1].address = address
+    phone = input("Podaj numer telefonu: ")
+    people[nr-1].phone = phone
+    Person.save(people)
 def menu8(): print("Wyświetlanie informacji o czytelniku...")
 
 
