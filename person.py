@@ -22,7 +22,7 @@ class Person:
         with open("personData.txt", 'r', encoding='utf-8') as f:
             for line in f:
                 parts = line.strip().split(';')
-                if int(parts[0]) >= next_id:
+                if int(parts[0]) > next_id:
                     next_id = int(parts[0]) + 1
         return next_id
 
@@ -89,7 +89,7 @@ class Person:
 
 ps = Person.load()
 ps.append(Person(fname="Marek", lname="Szpak", address="wd awafw awf", phone="643623255"))
-ps.pop(7)
+ps.pop()
 for person in ps:
     print(person.id, person.fname, person.lname, person.address, person.phone)
 Person.save(ps)
