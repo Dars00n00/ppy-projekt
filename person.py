@@ -1,29 +1,43 @@
 class Person:
 
     @staticmethod
+    def load():
+        arr = []
+        with open("personData.txt", 'r', encoding='utf-8') as f:
+            for line in f:
+                parts = line.strip().split(';')
+                arr.append(Person(id=int(parts[0]), fname=parts[1], lname=parts[2], address=parts[3], phone=parts[4]))
+        return arr
+
+    @staticmethod
+    def save(p):
+        with open("personData.txt", 'w', encoding='utf-8') as f:
+            for i in range(len(p)):
+                line = f"{p[i].id};{p[i].fname};{p[i].lname};{p[i].address};{p[i].phone}\n"
+                f.write(line)
+
+    @staticmethod
     def loadId():
         next_id = 0
         with open("personData.txt", 'r', encoding='utf-8') as f:
             for line in f:
                 parts = line.strip().split(';')
-                next_id = int(parts[0]) + 1
+                if int(parts[0]) >= next_id:
+                    next_id = int(parts[0]) + 1
         return next_id
 
     next_id = loadId()
 
-    def __init__(self, fname, lname, address, phone):
-        self._id = Person.next_id
-        Person.next_id += 1
-        self.fname = fname
-        self.lname = lname
-        self.address = address
-        self.phone = phone
-        self.save()
-
-    def save(self):
-        with open("personData.txt", 'a', encoding='utf-8') as f:
-            line = f"{self.id};{self.fname};{self.lname};{self.address};{self.phone}\n"
-            f.write(line)
+    def __init__(self,**kwargs):
+        if kwargs.get("id"):
+            self._id = kwargs["id"]
+        else :
+            self._id = Person.next_id
+            Person.next_id += 1
+        self.fname = kwargs.get("fname")
+        self.lname = kwargs.get("lname")
+        self.address = kwargs.get("address")
+        self.phone = kwargs.get("phone")
 
     @property
     def id(self):
@@ -73,6 +87,9 @@ class Person:
             raise ValueError('Phone number has to be 9 digits')
         self._phone = phone
 
-
-p = Person("Marek", "Szpak", "wd awafw awf", "643623255")
-
+ps = Person.load()
+ps.append(Person(fname="Marek", lname="Szpak", address="wd awafw awf", phone="643623255"))
+ps.pop(7)
+for person in ps:
+    print(person.id, person.fname, person.lname, person.address, person.phone)
+Person.save(ps)
