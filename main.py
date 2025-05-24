@@ -1,16 +1,83 @@
-# This is a sample Python script.
+from book import Book
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+print("============System zarządzania biblioteką============")
+
+print("  1) wpisz 1 aby dodać nową książkę")
+print("  2) wpisz 2 aby usunąć książkę")
+print("  3) wpisz 3 aby wyszukać książkę")
+print("  4) wpisz 4 aby wyświetlić informacje o książce/ach")
+
+print("  5) wpisz 5 aby dodać nowego czytelnika")
+print("  6) wpisz 6 aby usunąć czytelnika")
+print("  7) wpisz 7 aby wyszukać czytelnika")
+print("  8) wpisz 8 aby wyświetlić informacje o czytelniku/ach")
+
+print("  9) wpisz 7 aby dodać nowe wypożyczenie")
+print(" 10) wpisz 10 aby usunąć wypożyczenie")
+print(" 11) wpisz 11 aby wyszukać wypożyczenie")
+print(" 12) wpisz 12 aby wyświetlić informacje o wypożyczeniu/ach")
+
+print(" 13) wpisz 13 aby dodać nową rezerwację")
+print(" 14) wpisz 14 aby usunąć rezerwację")
+print(" 15) wpisz 15 aby wyszukać rezerwację")
+print(" 16) wpisz 16 aby wyświetlić informacje o rezerwacji/ach")
+
+print()
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def menu1():
+    options = ["tytuł", "autora", "numer isbn", "wydawcę", "liczbę stron"]
+    kwargs = []
+    for opt in options:
+        arg = input("podaj " + opt + " = ")
+        kwargs.append(arg.strip())
+    print(kwargs)
+    Book.add_book(title=kwargs[0],
+                  author=kwargs[1],
+                  isbn=kwargs[2],
+                  publisher=kwargs[3],
+                  pages=kwargs[4])
+def menu2(): Book.remove_book()
+def menu3(): Book.search_book()
+def menu4(): Book.remove_book()
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def menu5(): print("Dodawanie nowego czytelnika...")
+def menu6(): print("Usuwanie czytelnika...")
+def menu7(): print("Wyszukiwanie czytelnika...")
+def menu8(): print("Wyświetlanie informacji o czytelniku...")
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+def menu9(): print("Dodawanie nowego wypożyczenia...")
+def menu10(): print("Usuwanie wypożyczenia...")
+def menu11(): print("Wyszukiwanie wypożyczenia...")
+def menu12(): print("Wyświetlanie informacji o wypożyczeniu...")
+
+
+def menu13(): print("Dodawanie nowej rezerwacji...")
+def menu14(): print("Usuwanie rezerwacji...")
+def menu15(): print("Wyszukiwanie rezerwacji...")
+def menu16(): print("Wyświetlanie informacji o rezerwacji...")
+
+
+while True:
+    try:
+        option = int(input("wybierz menu = "))
+    except ValueError:
+        print(f"Niepoprawna opcja –> wpisz liczbę całkowitą od 1 do 12")
+    else:
+        match option:
+            case 1: menu1()
+            case 2: menu2()
+            case 3: menu3()
+            case 4: menu4()
+            case 5: menu5()
+            case 6: menu6()
+            case 7: menu7()
+            case 8: menu8()
+            case 9: menu9()
+            case 10: menu10()
+            case 11: menu11()
+            case 12: menu12()
+            case _: print(f"Niepoprawna opcja {option} –> wpisz liczbę całkowitą od 1 do 12")
+
