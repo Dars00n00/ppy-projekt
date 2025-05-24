@@ -4,23 +4,23 @@ print("============System zarządzania biblioteką============")
 
 print("  1) wpisz 1 aby dodać nową książkę")
 print("  2) wpisz 2 aby usunąć książkę")
-print("  3) wpisz 3 aby wyszukać książkę")
-print("  4) wpisz 4 aby wyświetlić informacje o książce/ach")
+print("  3) wpisz 3 aby edytować książkę")
+print("  4) wpisz 4 aby wyświetlić informacje o książkach")
 
 print("  5) wpisz 5 aby dodać nowego czytelnika")
 print("  6) wpisz 6 aby usunąć czytelnika")
-print("  7) wpisz 7 aby wyszukać czytelnika")
-print("  8) wpisz 8 aby wyświetlić informacje o czytelniku/ach")
+print("  7) wpisz 7 aby edytować czytelnika")
+print("  8) wpisz 8 aby wyświetlić informacje o czytelnikach")
 
-print("  9) wpisz 7 aby dodać nowe wypożyczenie")
+print("  9) wpisz 9 aby dodać nowe wypożyczenie")
 print(" 10) wpisz 10 aby usunąć wypożyczenie")
-print(" 11) wpisz 11 aby wyszukać wypożyczenie")
-print(" 12) wpisz 12 aby wyświetlić informacje o wypożyczeniu/ach")
+print(" 11) wpisz 11 aby edytować wypożyczenie")
+print(" 12) wpisz 12 aby wyświetlić informacje o wypożyczeniach")
 
 print(" 13) wpisz 13 aby dodać nową rezerwację")
 print(" 14) wpisz 14 aby usunąć rezerwację")
-print(" 15) wpisz 15 aby wyszukać rezerwację")
-print(" 16) wpisz 16 aby wyświetlić informacje o rezerwacji/ach")
+print(" 15) wpisz 15 aby edytować rezerwację")
+print(" 16) wpisz 16 aby wyświetlić informacje o rezerwacjach")
 
 print()
 
@@ -32,14 +32,29 @@ def menu1():
         arg = input("podaj " + opt + " = ")
         kwargs.append(arg.strip())
     print(kwargs)
-    Book.add_book(title=kwargs[0],
-                  author=kwargs[1],
-                  isbn=kwargs[2],
-                  publisher=kwargs[3],
-                  pages=kwargs[4])
-def menu2(): Book.remove_book()
-def menu3(): Book.search_book()
-def menu4(): Book.remove_book()
+    try:
+        Book.add_book(title=kwargs[0],
+                      author=kwargs[1],
+                      isbn=kwargs[2],
+                      publisher=kwargs[3],
+                      pages=kwargs[4])
+    except Exception as e:
+        print(f"Błąd przy dodawaniu książki: {e}")
+
+
+def menu2():
+    title = input("podaj tytuł książki = ")
+    if Book.remove_book(title):
+        print("usunięto książkę z bazy")
+
+
+def menu3():
+    title = input("podaj tytuł książki = ")
+    Book.edit_book(title)
+
+
+def menu4():
+    Book.display_books()
 
 
 def menu5(): print("Dodawanie nowego czytelnika...")

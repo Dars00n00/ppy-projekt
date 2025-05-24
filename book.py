@@ -5,19 +5,41 @@ class Book(object):
 
     @staticmethod
     def add_book(**kwargs):
-        book = Book(**kwargs)
-        print(book)
+        ids = []
+        new_book = Book(**kwargs)
+
+        with open("bookData.txt", "r") as f:
+            for line in f:
+                parts = line.split(";")
+                ids.append(int(parts[0]))
+
+        sorted_ids = sorted(ids)
+        next_id = sorted_ids[-1] + 1
+        new_line = f"{next_id};{new_book.title};{new_book.author};{new_book.isbn};{new_book.publisher};{new_book.pages}\n"
+
+        with open("bookData.txt", "a") as f:
+            f.write(new_line)
+
+        print(f"Dodano nową książkę {new_book} z id {next_id}")
 
     @staticmethod
-    def remove_book():
+    def remove_book(title) -> bool:
+        titles = []
+
+        with open("bookData.txt", "r") as f:
+            for line in f:
+                parts = line.split(";")
+                titles.append(parts[1])
+
+
+
+
+    @staticmethod
+    def edit_book(title):
         pass
 
     @staticmethod
-    def search_book(title):
-        pass
-
-    @staticmethod
-    def display_books():
+    def display_books(book):
         pass
 
     def __init__(self, **kwargs):
@@ -81,9 +103,10 @@ class Book(object):
 
     @pages.setter
     def pages(self, pages):
-        pages = int(pages)
-        if pages is None or not isinstance(pages, int):
-            raise EmptyBookParameterException("pages")
+        try:
+            pages = int(pages)
+        except (ValueError, TypeError):
+            raise BookParameterException(f"wrong number ({pages}) of pages")
         if pages <= 0:
             raise BookParameterException(f"wrong number ({pages}) of pages")
         self._pages = pages

@@ -1,0 +1,12 @@
+1;W pustyni i w puszczy;Henryk Sienkiewicz;9788373271890;Greg;320
+2;Lalka;Bolesław Prus;9788377912485;GREG;680
+3;Pan Tadeusz;Adam Mickiewicz;9788324054584;Znak;416
+4;Zbrodnia i kara;Fiodor Dostojewski;9788373271098;Greg;576
+5;Duma i uprzedzenie;Jane Austen;9788374953085;Świat Książki;448
+6;1984;George Orwell;9788381169886;Rebis;352
+7;Mistrz i Małgorzata;Michaił Bułhakow;9788376602646;Muza;512
+8;Mały Książę;Antoine de Saint-Exupéry;9788373271980;Znak;96
+9;Hobbit;J.R.R. Tolkien;9788373195828;Amber;320
+10;Wiedźmin: Ostatnie życzenie;Andrzej Sapkowski;9788375780633;SuperNOWA;288
+11;a;a;a;a;10
+12;a;b;c;d;1
