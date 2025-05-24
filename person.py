@@ -31,7 +31,7 @@ class Person:
     def __init__(self,**kwargs):
         if kwargs.get("id"):
             self._id = kwargs["id"]
-        else :
+        else:
             self._id = Person.next_id
             Person.next_id += 1
         self.fname = kwargs.get("fname")
