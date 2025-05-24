@@ -1,0 +1,11 @@
+1;Marek;Szpak;ul. Malinowa 2, 93-321 Warszawa;643623255
+2;Anna;Nowak;ul. Zielona 15, 00-123 Warszawa;512345678
+3;Jan;Kowalski;ul. Leśna 8, 62-050 Mosina;698765432
+4;Zofia;Wiśniewska;ul. Kwiatowa 20, 30-300 Kraków;601234567
+5;Paweł;Dąbrowski;ul. Spacerowa 5, 40-500 Katowice;789456123
+6;Katarzyna;Mazur;ul. Wiosenna 33, 80-100 Gdańsk;567891234
+7;Tomasz;Wójcik;ul. Jesienna 11, 90-001 Łódź;734561892
+8;Magdalena;Lewandowska;ul. Lipowa 9, 60-100 Poznań;601987654
+9;Piotr;Zieliński;ul. Polna 2, 50-321 Wrocław;723456789
+10;Ewa;Kamińska;ul. Słoneczna 17, 20-400 Lublin;654987321
+
