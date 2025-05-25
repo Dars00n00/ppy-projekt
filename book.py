@@ -6,38 +6,32 @@ class Book(object):
     @staticmethod
     def load_books():
         books = []
-        with open("bookData.txt", "r", encoding="utf-8") as f:
-            for line in f:
+        with open("bookData.txt", "r", encoding="utf-8") as file:
+            for line in file:
                 parts = line.split(";")
-                b = Book(id=int(parts[0]),
-                         title=parts[1],
-                         author=parts[2],
-                         isbn=parts[3],
-                         publisher=parts[4],
-                         pages=parts[5])
-                books.append(b)
+                book = Book(id=int(parts[0]), title=parts[1], author=parts[2],
+                            isbn=parts[3], publisher=parts[4], pages=parts[5])
+                books.append(book)
         return books
 
     @staticmethod
     def save_changes(books):
-        with open("bookData.txt", "w", encoding="utf-8") as f:
+        with open("bookData.txt", "w", encoding="utf-8") as file:
             for book in books:
-                f.write(f"{book.id};{book.title};{book.author};{book.isbn};{book.publisher};{book.pages}\n")
+                file.write(f"{book.id};{book.title};{book.author};{book.isbn};{book.publisher};{book.pages}")
 
     @staticmethod
     def add_book(**kwargs):
         books = Book.load_books()
         new_book = Book(id=Book.__next_id(), **kwargs)
-        print(new_book)
         books.append(new_book)
         Book.save_changes(books)
 
     @staticmethod
     def remove_book(id_rmv):
         books = Book.load_books()
-        removed = books.pop(id_rmv)
+        books.pop(id_rmv)
         Book.save_changes(books)
-        return removed
 
     @staticmethod
     def edit_book(id_edit, book):
@@ -76,6 +70,8 @@ class Book(object):
 
     @id.setter
     def id(self, id):
+        if id is None or id is not isinstance(id, int):
+            raise EmptyBookParameterException("id")
         self._id = id
 
     @property

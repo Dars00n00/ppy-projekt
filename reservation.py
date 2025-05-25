@@ -31,7 +31,7 @@ class Reservation:
     def add_reservation(**kwargs):
         reservations = Reservation.load_reservations()
         new_reservation = Reservation(id=Reservation.__next_id(), **kwargs)
-        print(new_reservation)
+        #print(new_reservation)
         reservations.append(new_reservation)
         Reservation.save_changes(reservations)
 

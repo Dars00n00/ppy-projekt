@@ -123,7 +123,6 @@ def menu13():  # dodaj rezerwację
     people_ids = [person.id for person in people]
     for p in people:
         print(p)
-    print(people_ids)
     person_id = int(input("Podaj id osoby dokonującej rezerwację = ").strip())
     if person_id not in people_ids:
         print("brak osoby o takim id -> powrót do menu")
@@ -133,7 +132,6 @@ def menu13():  # dodaj rezerwację
     books_ids = [book.id for book in books]
     for b in books:
         print(b)
-    print(books_ids)
     book_id = int(input("Podaj id książki do rezerwacji = ").strip())
     if book_id not in books_ids:
         print("brak książki o takim id -> powrót do menu")
