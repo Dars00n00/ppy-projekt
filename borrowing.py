@@ -8,7 +8,7 @@ class Borrowing:
         with open("borrowingData.txt", 'r', encoding='utf-8') as f:
             for line in f:
                 parts = line.strip().split(';')
-                arr.append(Borrowing(id_person=int(parts[0]), id_book=parts[1], date_from=parts[2], date_to=parts[3], returned=parts[4]))
+                arr.append(Borrowing(id_person=int(parts[0]), id_book=int(parts[1]), date_from=parts[2], date_to=parts[3], returned=parts[4]))
         return arr
 
     @staticmethod
@@ -24,11 +24,11 @@ class Borrowing:
         self.id_person = kwargs.get("id_person")
         self.id_book = kwargs.get("id_book")
         if kwargs.get("date_from"):
-            self._date_from = kwargs["date_from"]
-            if kwargs["returned"] == "True":
-                self.returned = True
+            self._date_from = kwargs.get("date_from")
+            if kwargs.get("returned") == "True":
+                self._returned = True
             else:
-                self.returned = False
+                self._returned = False
         else:
             self._date_from = datetime.today().date().isoformat()
             self.returned = False
@@ -84,3 +84,13 @@ class Borrowing:
         if parsedTo < parsedFrom:
             raise ValueError('To date cannot be before From date')
         self._date_to = date_to
+
+    @property
+    def returned(self):
+        return self._returned
+
+    @returned.setter
+    def returned(self, returned):
+        if not returned:
+            raise ValueError('Returned cannot be empty')
+        self._returned = returned

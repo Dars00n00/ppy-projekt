@@ -31,19 +31,22 @@ class Book(object):
     @staticmethod
     def remove_book(id_rmv):
         books = Book.load_books()
-        removed = books.pop(id_rmv)
+        for list_index, book in enumerate(books):
+            #print(list_index, book)
+            if id_rmv == book.id:
+                removed = books.pop(list_index)
+                print("Usunięto książkę " + str(removed))
+                break
         Book.save_changes(books)
-        print("Usunięto książkę " + str(removed))
 
     @staticmethod
-    def edit_book(id_edit, book):
+    def edit_book(id_edit, edited_book):
         books = Book.load_books()
-        for list_index, book_id in enumerate(books):
-            if book_id == id_edit:
-                books[list_index] = book
-                Book.save_changes(books)
+        for list_index, book in enumerate(books):
+            if id_edit == book.id:
+                books[list_index] = edited_book
                 break
-
+        Book.save_changes(books)
 
     @staticmethod
     def display_books():

@@ -91,10 +91,3 @@ class Person:
         return (f"Person id={self.id}, firstname={self.fname}, lastname={self.lname},"
                 f"address={self.address}, phone={self.phone}")
 
-
-ps = Person.load()
-ps.append(Person(fname="Marek", lname="Szpak", address="wd awafw awf", phone="643623255"))
-ps.pop()
-for person in ps:
-    print(person.id, person.fname, person.lname, person.address, person.phone)
-Person.save(ps)

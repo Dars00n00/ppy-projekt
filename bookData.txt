@@ -8,4 +8,3 @@
 8;Mały Książę;Antoine de Saint-Exupéry;9788373271980;Znak;96
 9;Hobbit;J.R.R. Tolkien;9788373195828;Amber;320
 10;Wiedźmin: Ostatnie życzenie;Andrzej Sapkowski;9788375780633;SuperNOWA;288
-11;XD;XD;XD;XD;10
