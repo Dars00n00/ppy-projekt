@@ -53,7 +53,7 @@ def menu2():
         print(book)
     arg_id = int(input("wybierz numer książki do usunięcia = "))
     removed = Book.remove_book(arg_id-1)
-    print(f"successfully removed book {removed}")
+    print(f"usunięto książkę {removed}")
 
 
 def menu3():
@@ -144,19 +144,29 @@ def menu11(): print("Wyszukiwanie wypożyczenia...")
 def menu12(): print("Wyświetlanie informacji o wypożyczeniu...")
 
 
-def menu13():
+def menu13():  # dodaj rezerwację
     people = Person.load()
+    people_ids = [person.id for person in people]
     for p in people:
         print(p)
-    person_id = int(input("Podaj id osoby dokonującej rezerwację = "))
+    print(people_ids)
+    person_id = int(input("Podaj id osoby dokonującej rezerwację = ").strip())
+    if person_id not in people_ids:
+        print("brak osoby o takim id -> powrót do menu")
+        return
 
     books = Book.load_books()
+    books_ids = [book.id for book in books]
     for b in books:
         print(b)
-    book_id = int(input("Podaj id książki do rezerwacji = "))
+    print(books_ids)
+    book_id = int(input("Podaj id książki do rezerwacji = ").strip())
+    if book_id not in books_ids:
+        print("brak książki o takim id -> powrót do menu")
+        return
 
-    begin_date = input("Podaj datę rozpoczęcia rezerwacji (YYYY-MM-DD) = ")
-    end_date = input("Podaj datę zakończenia rezerwacji (YYYY-MM-DD) = ")
+    begin_date = input("Podaj datę rozpoczęcia rezerwacji (YYYY-MM-DD) = ").strip()
+    end_date = input("Podaj datę zakończenia rezerwacji (YYYY-MM-DD) = ").strip()
 
     Reservation.add_reservation(
         person_id=person_id,
@@ -165,9 +175,21 @@ def menu13():
         end_date=end_date)
 
 
-def menu14(): print("Usuwanie rezerwacji...")
-def menu15(): print("Wyszukiwanie rezerwacji...")
-def menu16(): print("Wyświetlanie informacji o rezerwacji...")
+def menu14():  # usuń rezerwację
+    reservations = Reservation.load_reservations()
+    for r in reservations:
+        print(r)
+    reservation_id = int(input("wybierz numer rezerwacji do usunięcia = "))
+    removed = Reservation.remove_reservation(reservation_id - 1)
+    print(f"usunięto rezerwację {removed}")
+
+
+def menu15():  # znajdź rezerwację
+    print("Wyszukiwanie rezerwacji...")
+
+
+def menu16():  # wyświetl rezerwacje
+    Reservation.display_reservations()
 
 
 while True:

@@ -1,5 +1,7 @@
+from book import Book
 from exceptions import EmptyReservationParameterException
 from datetime import date, datetime
+from person import Person
 
 
 class Reservation:
@@ -10,9 +12,10 @@ class Reservation:
         with open("reservationData.txt", "r", encoding="utf-8") as f:
             for line in f:
                 parts = line.split(";")
-                r = Reservation(id=parts[0],
-                                person_id=parts[1],
-                                book_id=parts[2],
+                print(parts)
+                r = Reservation(id=int(parts[0]),
+                                person_id=int(parts[1]),
+                                book_id=int(parts[2]),
                                 begin_date=parts[3],
                                 end_date=parts[4])
                 reservations.append(r)
@@ -40,10 +43,25 @@ class Reservation:
         return removed
 
     @staticmethod
+    def edit_reservation(id_edit, reservation):
+        reservations = Reservation.load_reservations()
+        reservations[id_edit] = reservation
+        Reservation.save_changes(reservations)
+
+    @staticmethod
     def display_reservations():
         reservations = Reservation.load_reservations()
-        for r in reservations:
-            print(r)
+        books = Book.load_books()
+        people = Person.load()
+
+        if len(reservations) == 0:
+            print("brak rezerwacji")
+        else:
+            for r in reservations:
+                person = people[r.person_id]
+                book = books[r.book_id]
+
+                print(f"{r}\n{person}\n{book}\n")
 
     @staticmethod
     def __next_id() -> int:
@@ -56,10 +74,7 @@ class Reservation:
             return int(sorted(ids)[-1])
 
     def __init__(self, **kwargs):
-        if kwargs.get("id"):
-            self.id = kwargs.get("id")
-        else:
-            self.id = self.__next_id()
+        self.id = kwargs.get("id")
         self.person_id = kwargs.get("person_id")
         self.book_id = kwargs.get("book_id")
         self.begin_date = kwargs.get("begin_date")
@@ -71,6 +86,8 @@ class Reservation:
 
     @id.setter
     def id(self, id):
+        if id is None or not isinstance(id, int):
+            raise EmptyReservationParameterException("id")
         self._id = id
 
     @property
@@ -103,7 +120,7 @@ class Reservation:
             raise EmptyReservationParameterException("begin_date")
         if isinstance(begin_date, str):
             try:
-                begin_date = datetime.strptime(begin_date, "%Y-%m-%d").date()
+                begin_date = datetime.strptime(begin_date.strip(), "%Y-%m-%d").date()
             except ValueError:
                 raise EmptyReservationParameterException("begin_date (invalid format) (correct format='YYYY-MM-DD')")
         elif not isinstance(begin_date, date):
@@ -120,7 +137,7 @@ class Reservation:
             raise EmptyReservationParameterException("end_date")
         if isinstance(end_date, str):
             try:
-                end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+                end_date = datetime.strptime(end_date.strip(), "%Y-%m-%d").date()
             except ValueError:
                 raise EmptyReservationParameterException("end_date (invalid format) (correct format='YYYY-MM-DD')")
         elif not isinstance(end_date, date):
@@ -128,5 +145,5 @@ class Reservation:
         self._end_date = end_date
 
     def __str__(self):
-        return (f"Reservation id: {self.id}, Person: [{self.person_id}], Book: [{self.book_id}], "
-                f"From: {self.begin_date}, To: {self.end_date}")
+        return (f"Reservation id={self.id}, Person id={self.person_id}, Book id={self.book_id}, "
+                f"From={self.begin_date}, To={self.end_date}")
