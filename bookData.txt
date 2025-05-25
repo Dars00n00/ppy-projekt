@@ -1,3 +1,4 @@
+1;Rok 1984;George Orwell;9780451524935;Penguin Books;328
 2;Lalka;Bolesław Prus;9788377912485;GREG;680
 3;Pan Tadeusz;Adam Mickiewicz;9788324054584;Znak;416
 4;Zbrodnia i kara;Fiodor Dostojewski;9788373271098;Greg;576
@@ -7,5 +8,4 @@
 8;Mały Książę;Antoine de Saint-Exupéry;9788373271980;Znak;96
 9;Hobbit;J.R.R. Tolkien;9788373195828;Amber;320
 10;Wiedźmin: Ostatnie życzenie;Andrzej Sapkowski;9788375780633;SuperNOWA;288
-11;a;a;a;a;10
-12;a;b;c;d;1
+11;XD;XD;XD;XD;10

@@ -12,7 +12,6 @@ class Reservation:
         with open("reservationData.txt", "r", encoding="utf-8") as f:
             for line in f:
                 parts = line.split(";")
-                print(parts)
                 r = Reservation(id=int(parts[0]),
                                 person_id=int(parts[1]),
                                 book_id=int(parts[2]),
@@ -30,7 +29,7 @@ class Reservation:
     @staticmethod
     def add_reservation(**kwargs):
         reservations = Reservation.load_reservations()
-        new_reservation = Reservation(id=Reservation.__next_id(), **kwargs)
+        new_reservation = Reservation(id=Reservation.next_id(), **kwargs)
         #print(new_reservation)
         reservations.append(new_reservation)
         Reservation.save_changes(reservations)
@@ -64,14 +63,15 @@ class Reservation:
                 print(f"{r}\n{person}\n{book}\n")
 
     @staticmethod
-    def __next_id() -> int:
+    def next_id() -> int:
         ids = []
         for r in Reservation.load_reservations():
             ids.append(r.id)
         if len(ids) == 0:
             return 0
         else:
-            return int(sorted(ids)[-1])
+            return int(sorted(ids)[-1])+1
+
 
     def __init__(self, **kwargs):
         self.id = kwargs.get("id")

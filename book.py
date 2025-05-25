@@ -18,7 +18,7 @@ class Book(object):
     def save_changes(books):
         with open("bookData.txt", "w", encoding="utf-8") as file:
             for book in books:
-                file.write(f"{book.id};{book.title};{book.author};{book.isbn};{book.publisher};{book.pages}")
+                file.write(f"{book.id};{book.title};{book.author};{book.isbn};{book.publisher};{book.pages}\n")
 
     @staticmethod
     def add_book(**kwargs):
@@ -26,18 +26,24 @@ class Book(object):
         new_book = Book(id=Book.__next_id(), **kwargs)
         books.append(new_book)
         Book.save_changes(books)
+        print("Dodano nową książkę: " + str(new_book))
 
     @staticmethod
     def remove_book(id_rmv):
         books = Book.load_books()
-        books.pop(id_rmv)
+        removed = books.pop(id_rmv)
         Book.save_changes(books)
+        print("Usunięto książkę " + str(removed))
 
     @staticmethod
     def edit_book(id_edit, book):
         books = Book.load_books()
-        books[id_edit] = book
-        Book.save_changes(books)
+        for list_index, book_id in enumerate(books):
+            if book_id == id_edit:
+                books[list_index] = book
+                Book.save_changes(books)
+                break
+
 
     @staticmethod
     def display_books():
@@ -50,7 +56,7 @@ class Book(object):
         ids = []
         for book in Book.load_books():
             ids.append(book.id)
-        return sorted(ids)[-1]
+        return sorted(ids)[-1]+1
 
     def __init__(self, **kwargs):
         if kwargs.get("id"):
@@ -71,8 +77,7 @@ class Book(object):
     @id.setter
     def id(self, id):
         if id is None or id is not isinstance(id, int):
-            raise EmptyBookParameterException("id")
-        self._id = id
+            self._id = int(id)
 
     @property
     def title(self):
@@ -137,5 +142,5 @@ class Book(object):
         self._pages = pages
 
     def __str__(self):
-        return (f"Id={self.id}, Title={self.title}, Author={self.author}, ISBN={self.isbn},"
+        return (f"Book id={self.id}, Title={self.title}, Author={self.author}, ISBN={self.isbn},"
                 f" Pages={str(self.pages)}, Publisher={self.publisher}")

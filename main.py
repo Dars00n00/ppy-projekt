@@ -1,5 +1,3 @@
-from operator import index, indexOf
-
 from book import Book
 from borrowing import Borrowing
 from person import Person
@@ -30,19 +28,15 @@ print(" 16) wpisz 16 aby wyświetlić informacje o rezerwacjach")
 print()
 
 
-def menu1():
+def menu1(): # dodaj książkę
     options = ["tytuł", "autora", "numer isbn", "wydawcę", "liczbę stron"]
     kwargs = []
     for opt in options:
         arg = input("podaj " + opt + " = ")
         kwargs.append(arg.strip())
-    #print(kwargs)
     try:
-        Book.add_book(title=kwargs[0],
-                      author=kwargs[1],
-                      isbn=kwargs[2],
-                      publisher=kwargs[3],
-                      pages=kwargs[4])
+        Book.add_book(title=kwargs[0], author=kwargs[1], isbn=kwargs[2],
+                      publisher=kwargs[3], pages=kwargs[4])
     except Exception as e:
         print(f"Błąd przy dodawaniu książki: {e}")
 
@@ -52,8 +46,7 @@ def menu2():
     for book in books:
         print(book)
     arg_id = int(input("wybierz numer książki do usunięcia = "))
-    removed = Book.remove_book(arg_id-1)
-    print(f"usunięto książkę {removed}")
+    Book.remove_book(arg_id-1)
 
 
 def menu3():
@@ -61,20 +54,24 @@ def menu3():
     for book in books:
         print(book)
 
-    arg_id = int(input("wybierz numer książki do edycji = "))
+    try:
+        arg_id = int(input("wybierz numer książki do edycji = "))
+        options = ["tytuł", "autor", "numer isbn", "wydawca", "numer stron"]
+        kwargs = []
+        for opt in options:
+            arg = input("nowy" + opt + " = ")
+            kwargs.append(arg.strip())
 
-    options = ["tytuł", "autor", "numer isbn", "wydawca", "numer stron"]
-    kwargs = []
-    for opt in options:
-        arg = input("nowy" + opt + " = ")
-        kwargs.append(arg.strip())
+        b = Book(title=kwargs[0],
+                 author=kwargs[1],
+                 isbn=kwargs[2],
+                 publisher=kwargs[3],
+                 pages=kwargs[4])
+        Book.edit_book(arg_id, b)
+    except ValueError:
+        print("podaj liczbę")
 
-    b = Book(title=kwargs[0],
-             author=kwargs[1],
-             isbn=kwargs[2],
-             publisher=kwargs[3],
-             pages=kwargs[4])
-    Book.edit_book(arg_id, b)
+
 
 
 def menu4():
@@ -155,8 +152,11 @@ def menu13():  # dodaj rezerwację
         return
 
     books = Book.load_books()
-    books_ids = [book.id for book in books]
-    for b in books:
+    borrowings = Borrowing.load()
+    borrowed_book_ids = {b.id_book for b in borrowings if not b.returned}
+    available_books = [book for book in books if book.id not in borrowed_book_ids]
+    books_ids = [book.id for book in available_books]
+    for b in available_books:
         print(b)
     book_id = int(input("Podaj id książki do rezerwacji = ").strip())
     if book_id not in books_ids:

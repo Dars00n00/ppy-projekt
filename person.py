@@ -88,11 +88,9 @@ class Person:
         self._phone = phone
 
     def __str__(self):
-<<<<<<< HEAD
-        return f"Person id={self.id}, firstname={self.fname}], lastname={self.lname}], address={self.address}, phone={self.phone}"
-=======
-        return (f"Person id={self.id}, firstname={self.fname}, lastname={self.lname}, "
+        return (f"Person id={self.id}, firstname={self.fname}, lastname={self.lname},"
                 f"address={self.address}, phone={self.phone}")
+
 
 ps = Person.load()
 ps.append(Person(fname="Marek", lname="Szpak", address="wd awafw awf", phone="643623255"))
@@ -100,4 +98,3 @@ ps.pop()
 for person in ps:
     print(person.id, person.fname, person.lname, person.address, person.phone)
 Person.save(ps)
->>>>>>> c6301898fe280c67c74032a402bd085d9c845ee7
