@@ -88,7 +88,8 @@ class Person:
         self._phone = phone
 
     def __str__(self):
-        return f"Person id={self.id}, firstname={self.fname}], lastname={self.lname}], address={self.address}, phone={self.phone}"
+        return (f"Person id={self.id}, firstname={self.fname}, lastname={self.lname}, "
+                f"address={self.address}, phone={self.phone}")
 
 ps = Person.load()
 ps.append(Person(fname="Marek", lname="Szpak", address="wd awafw awf", phone="643623255"))

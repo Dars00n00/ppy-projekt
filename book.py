@@ -9,7 +9,7 @@ class Book(object):
         with open("bookData.txt", "r", encoding="utf-8") as f:
             for line in f:
                 parts = line.split(";")
-                b = Book(id=parts[0],
+                b = Book(id=int(parts[0]),
                          title=parts[1],
                          author=parts[2],
                          isbn=parts[3],
@@ -141,5 +141,5 @@ class Book(object):
         self._pages = pages
 
     def __str__(self):
-        return (f"[Id: {self.id}, Title: {self.title}, Author: {self.author}, ISBN: {self.isbn},"
-                f" Pages: {str(self.pages)}, Publisher: {self.publisher}]")
+        return (f"Id={self.id}, Title={self.title}, Author={self.author}, ISBN={self.isbn},"
+                f" Pages={str(self.pages)}, Publisher={self.publisher}")
