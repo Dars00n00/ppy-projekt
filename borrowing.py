@@ -1,6 +1,6 @@
 from datetime import datetime
 
-class Borowing:
+class Borrowing:
 
     @staticmethod
     def load():
@@ -8,7 +8,7 @@ class Borowing:
         with open("borrowingData.txt", 'r', encoding='utf-8') as f:
             for line in f:
                 parts = line.strip().split(';')
-                arr.append(Borowing(id_person=int(parts[0]), id_book=parts[1], date_from=parts[2], date_to=parts[3], returned=parts[4]))
+                arr.append(Borrowing(id_person=int(parts[0]), id_book=parts[1], date_from=parts[2], date_to=parts[3], returned=parts[4]))
         return arr
 
     @staticmethod
@@ -84,11 +84,3 @@ class Borowing:
         if parsedTo < parsedFrom:
             raise ValueError('To date cannot be before From date')
         self._date_to = date_to
-
-ps = Borowing.load()
-ps.append(Borowing(id_person=1, id_book=5, date_to="2025-07-25"))
-
-for person in ps:
-    print(person.id_person, person.id_book, person.date_from, person.date_to, person.returned)
-Borowing.save(ps)
-

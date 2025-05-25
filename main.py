@@ -1,4 +1,7 @@
+from operator import index, indexOf
+
 from book import Book
+from borrowing import Borrowing
 from person import Person
 from reservation import Reservation
 
@@ -78,41 +81,64 @@ def menu4():
     Book.display_books()
 
 
-people = Person.load()
+
 def menu5():
-    fname = input("Podaj imie: ")
-    lname = input("Podaj nazwisko: ")
-    address = input("Podaj adres: ")
-    phone = input("Podaj numer telefonu: ")
+    people = Person.load()
+    fname = input("Podaj imie: ").strip()
+    lname = input("Podaj nazwisko: ").strip()
+    address = input("Podaj adres: ").strip()
+    phone = input("Podaj numer telefonu: ").strip()
     people.append(Person(fname=fname, lname=lname, address=address, phone=phone))
     Person.save(people)
 def menu6():
+    people = Person.load()
     count = 1
     for person in people:
-        print(count,  ". ",person.fname, person.lname, person.address, person.phone)
+        print(count,  ". ", person.id, person.fname, person.lname, person.address, person.phone)
         count += 1
     nr = int(input("Usuń czytelnika o numerze: "))
     del people[nr-1]
     Person.save(people)
 def menu7():
+    people = Person.load()
     count = 1
     for person in people:
-        print(count, ". ", person.fname, person.lname, person.address, person.phone)
+        print(count, ". ", person.id, person.fname, person.lname, person.address, person.phone)
         count += 1
     nr = int(input("Edytuj czytelnika o numerze: "))
-    fname = input("Podaj imie: ")
+    fname = input("Podaj imie: ").strip()
     people[nr - 1].fname = fname
-    lname = input("Podaj nazwisko: ")
+    lname = input("Podaj nazwisko: ").strip()
     people[nr - 1].lname = lname
-    address = input("Podaj adres: ")
+    address = input("Podaj adres: ").strip()
     people[nr - 1].address = address
-    phone = input("Podaj numer telefonu: ")
+    phone = input("Podaj numer telefonu: ").strip()
     people[nr-1].phone = phone
     Person.save(people)
 def menu8(): print("Wyświetlanie informacji o czytelniku...")
 
 
-def menu9(): print("Dodawanie nowego wypożyczenia...")
+def menu9():
+    people = Person.load()
+    books = Book.load_books()
+    borrowings = Borrowing.load()
+
+    count = 1
+    for person in people:
+        print(count, ". ", person.id, person.fname, person.lname, person.address, person.phone)
+        count += 1
+    nr_czytelnika = int(input("Wypożycza czytelnik o numerze: "))
+
+    borrowed_book_ids = {b.id_book for b in borrowings if not b.returned}
+    available_books = [book for book in books if book.id not in borrowed_book_ids]
+
+    count = 1
+    for book in available_books:
+        print(count, ". ", book.title)
+        count += 1
+
+
+
 def menu10(): print("Usuwanie wypożyczenia...")
 def menu11(): print("Wyszukiwanie wypożyczenia...")
 def menu12(): print("Wyświetlanie informacji o wypożyczeniu...")
