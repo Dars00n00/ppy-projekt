@@ -25,10 +25,10 @@ class Borowing:
         self.id_book = kwargs.get("id_book")
         if kwargs.get("date_from"):
             self._date_from = kwargs["date_from"]
-            if kwargs["returned"] == 0:
-                self.returned = False
-            else:
+            if kwargs["returned"] == "True":
                 self.returned = True
+            else:
+                self.returned = False
         else:
             self._date_from = datetime.today().date().isoformat()
             self.returned = False
