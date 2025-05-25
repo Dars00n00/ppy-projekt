@@ -33,7 +33,7 @@ def menu1():
     for opt in options:
         arg = input("podaj " + opt + " = ")
         kwargs.append(arg.strip())
-    print(kwargs)
+    #print(kwargs)
     try:
         Book.add_book(title=kwargs[0],
                       author=kwargs[1],
@@ -45,14 +45,33 @@ def menu1():
 
 
 def menu2():
-    title = input("podaj tytuł książki = ")
-    if Book.remove_book(title):
-        print("usunięto książkę z bazy")
+    books = Book.load_books()
+    for book in books:
+        print(book)
+    arg_id = int(input("wybierz numer książki do usunięcia = "))
+    removed = Book.remove_book(arg_id-1)
+    print(f"successfully removed book {removed}")
 
 
 def menu3():
-    title = input("podaj tytuł książki = ")
-    Book.edit_book(title)
+    books = Book.load_books()
+    for book in books:
+        print(book)
+
+    arg_id = int(input("wybierz numer książki do edycji = "))
+
+    options = ["tytuł", "autor", "numer isbn", "wydawca", "numer stron"]
+    kwargs = []
+    for opt in options:
+        arg = input("nowy" + opt + " = ")
+        kwargs.append(arg.strip())
+
+    b = Book(title=kwargs[0],
+             author=kwargs[1],
+             isbn=kwargs[2],
+             publisher=kwargs[3],
+             pages=kwargs[4])
+    Book.edit_book(arg_id, b)
 
 
 def menu4():

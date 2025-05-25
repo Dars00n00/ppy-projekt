@@ -1,4 +1,3 @@
-1;W pustyni i w puszczy;Henryk Sienkiewicz;9788373271890;Greg;320
 2;Lalka;Bolesław Prus;9788377912485;GREG;680
 3;Pan Tadeusz;Adam Mickiewicz;9788324054584;Znak;416
 4;Zbrodnia i kara;Fiodor Dostojewski;9788373271098;Greg;576

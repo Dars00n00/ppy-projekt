@@ -4,50 +4,79 @@ from exceptions import BookParameterException, EmptyBookParameterException
 class Book(object):
 
     @staticmethod
+    def load_books():
+        books = []
+        with open("bookData.txt", "r", encoding="utf-8") as f:
+            for line in f:
+                parts = line.split(";")
+                b = Book(id=parts[0],
+                         title=parts[1],
+                         author=parts[2],
+                         isbn=parts[3],
+                         publisher=parts[4],
+                         pages=parts[5])
+                books.append(b)
+        return books
+
+    @staticmethod
+    def save_changes(books):
+        with open("bookData.txt", "w", encoding="utf-8") as f:
+            for book in books:
+                f.write(f"{book.id};{book.title};{book.author};{book.isbn};{book.publisher};{book.pages}\n")
+
+    @staticmethod
     def add_book(**kwargs):
+        books = Book.load_books()
+        new_book = Book(id=Book.__next_id(), **kwargs)
+        print(new_book)
+        books.append(new_book)
+        Book.save_changes(books)
+
+    @staticmethod
+    def remove_book(id_rmv):
+        books = Book.load_books()
+        removed = books.pop(id_rmv)
+        Book.save_changes(books)
+        return removed
+
+    @staticmethod
+    def edit_book(id_edit, book):
+        books = Book.load_books()
+        books[id_edit] = book
+        Book.save_changes(books)
+
+    @staticmethod
+    def display_books():
+        books = Book.load_books()
+        for book in books:
+            print(book)
+
+    @staticmethod
+    def __next_id() -> int:
         ids = []
-        new_book = Book(**kwargs)
-
-        with open("bookData.txt", "r") as f:
-            for line in f:
-                parts = line.split(";")
-                ids.append(int(parts[0]))
-
-        sorted_ids = sorted(ids)
-        next_id = sorted_ids[-1] + 1
-        new_line = f"{next_id};{new_book.title};{new_book.author};{new_book.isbn};{new_book.publisher};{new_book.pages}\n"
-
-        with open("bookData.txt", "a") as f:
-            f.write(new_line)
-
-        print(f"Dodano nową książkę {new_book} z id {next_id}")
-
-    @staticmethod
-    def remove_book(title) -> bool:
-        titles = []
-
-        with open("bookData.txt", "r") as f:
-            for line in f:
-                parts = line.split(";")
-                titles.append(parts[1])
-
-
-
-
-    @staticmethod
-    def edit_book(title):
-        pass
-
-    @staticmethod
-    def display_books(book):
-        pass
+        for book in Book.load_books():
+            ids.append(book.id)
+        return sorted(ids)[-1]
 
     def __init__(self, **kwargs):
+        if kwargs.get("id"):
+            self.id = kwargs.get("id")
+        else:
+            self.id = self.__next_id()
+
         self.title = kwargs.get("title")
         self.author = kwargs.get("author")
         self.isbn = kwargs.get("isbn")
         self.publisher = kwargs.get("publisher")
         self.pages = kwargs.get("pages")
+
+    @property
+    def id(self):
+        return self._id
+
+    @id.setter
+    def id(self, id):
+        self._id = id
 
     @property
     def title(self):
@@ -112,6 +141,5 @@ class Book(object):
         self._pages = pages
 
     def __str__(self):
-        return (f"[Title: {self.title}, Author: {self.author}, ISBN: {self.isbn},"
+        return (f"[Id: {self.id}, Title: {self.title}, Author: {self.author}, ISBN: {self.isbn},"
                 f" Pages: {str(self.pages)}, Publisher: {self.publisher}]")
-
