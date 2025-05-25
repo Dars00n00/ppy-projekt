@@ -1,6 +1,6 @@
 from book import Book
 from person import Person
-
+from reservation import Reservation
 
 print("============System zarządzania biblioteką============")
 
@@ -118,7 +118,27 @@ def menu11(): print("Wyszukiwanie wypożyczenia...")
 def menu12(): print("Wyświetlanie informacji o wypożyczeniu...")
 
 
-def menu13(): print("Dodawanie nowej rezerwacji...")
+def menu13():
+    people = Person.load()
+    for p in people:
+        print(p)
+    person_id = int(input("Podaj id osoby dokonującej rezerwację = "))
+
+    books = Book.load_books()
+    for b in books:
+        print(b)
+    book_id = int(input("Podaj id książki do rezerwacji = "))
+
+    begin_date = input("Podaj datę rozpoczęcia rezerwacji (YYYY-MM-DD) = ")
+    end_date = input("Podaj datę zakończenia rezerwacji (YYYY-MM-DD) = ")
+
+    Reservation.add_reservation(
+        person_id=person_id,
+        book_id=book_id,
+        begin_date=begin_date,
+        end_date=end_date)
+
+
 def menu14(): print("Usuwanie rezerwacji...")
 def menu15(): print("Wyszukiwanie rezerwacji...")
 def menu16(): print("Wyświetlanie informacji o rezerwacji...")
@@ -143,5 +163,9 @@ while True:
             case 10: menu10()
             case 11: menu11()
             case 12: menu12()
-            case _: print(f"Niepoprawna opcja {option} –> wpisz liczbę całkowitą od 1 do 12")
+            case 13: menu13()
+            case 14: menu14()
+            case 15: menu15()
+            case 16: menu16()
+            case _: print(f"Niepoprawna opcja {option} –> wpisz liczbę całkowitą od 1 do 16")
 
