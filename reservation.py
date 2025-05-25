@@ -12,7 +12,6 @@ class Reservation:
         with open("reservationData.txt", "r", encoding="utf-8") as f:
             for line in f:
                 parts = line.split(";")
-                print(parts)
                 r = Reservation(id=int(parts[0]),
                                 person_id=int(parts[1]),
                                 book_id=int(parts[2]),

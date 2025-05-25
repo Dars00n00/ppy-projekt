@@ -5,30 +5,6 @@ from borrowing import Borrowing
 from person import Person
 from reservation import Reservation
 
-print("============System zarządzania biblioteką============")
-
-print("  1) wpisz 1 aby dodać nową książkę")
-print("  2) wpisz 2 aby usunąć książkę")
-print("  3) wpisz 3 aby edytować książkę")
-print("  4) wpisz 4 aby wyświetlić informacje o książkach")
-
-print("  5) wpisz 5 aby dodać nowego czytelnika")
-print("  6) wpisz 6 aby usunąć czytelnika")
-print("  7) wpisz 7 aby edytować czytelnika")
-print("  8) wpisz 8 aby wyświetlić informacje o czytelnikach")
-
-print("  9) wpisz 9 aby dodać nowe wypożyczenie")
-print(" 10) wpisz 10 aby usunąć wypożyczenie")
-print(" 11) wpisz 11 aby edytować wypożyczenie")
-print(" 12) wpisz 12 aby wyświetlić informacje o wypożyczeniach")
-
-print(" 13) wpisz 13 aby dodać nową rezerwację")
-print(" 14) wpisz 14 aby usunąć rezerwację")
-print(" 15) wpisz 15 aby edytować rezerwację")
-print(" 16) wpisz 16 aby wyświetlić informacje o rezerwacjach")
-
-print()
-
 
 def menu1():
     options = ["tytuł", "autora", "numer isbn", "wydawcę", "liczbę stron"]
@@ -90,6 +66,7 @@ def menu5():
     phone = input("Podaj numer telefonu: ").strip()
     people.append(Person(fname=fname, lname=lname, address=address, phone=phone))
     Person.save(people)
+
 def menu6():
     people = Person.load()
     count = 1
@@ -99,6 +76,7 @@ def menu6():
     nr = int(input("Usuń czytelnika o numerze: "))
     del people[nr-1]
     Person.save(people)
+
 def menu7():
     people = Person.load()
     count = 1
@@ -115,8 +93,34 @@ def menu7():
     phone = input("Podaj numer telefonu: ").strip()
     people[nr-1].phone = phone
     Person.save(people)
-def menu8(): print("Wyświetlanie informacji o czytelniku...")
 
+def menu8():
+    people = Person.load()
+    books = Book.load_books()
+    borrowings = Borrowing.load()
+    revervations = Reservation.load_reservations()
+
+    count = 1
+    for person in people:
+        print(count, ". ", person.id, person.fname, person.lname, person.address, person.phone)
+        count += 1
+    nr = int(input("Wyświetl informacjie o czytelniku o numerze: "))
+    print("=========Rezerwacje=========")
+    for reservation in revervations:
+        if people[nr - 1].id == reservation.person_id:
+            for book in books:
+                if book.id == reservation.book_id:
+                    print(book.title, "od" , reservation.begin_date, "do", reservation.end_date)
+    print("=========Wypożyczenia=========")
+    for borrowing in borrowings:
+        if people[nr - 1].id == borrowing.id_person:
+            for book in books:
+                if book.id == borrowing.id_book:
+                    print(book.title, "od" , borrowing.date_from, "do", borrowing.date_to, end="")
+                    if borrowing.returned == True:
+                        print("| zwrócona")
+                    else:
+                        print("| niezwrócona")
 
 def menu9():
     people = Person.load()
@@ -136,12 +140,12 @@ def menu9():
     for book in available_books:
         print(count, ". ", book.title)
         count += 1
+    nr_ksiazki = int(input("Wypożycza książkę o numerze: "))
+    date_to = input("Wypożycza do (YYYY-MM-DD): ").strip()
 
+    borrowings.append(Borrowing(id_person=people[nr_czytelnika-1].id, id_book=available_books[nr_ksiazki-1].id, date_to=date_to))
+    Borrowing.save(borrowings)
 
-
-def menu10(): print("Usuwanie wypożyczenia...")
-def menu11(): print("Wyszukiwanie wypożyczenia...")
-def menu12(): print("Wyświetlanie informacji o wypożyczeniu...")
 
 
 def menu13():  # dodaj rezerwację
@@ -193,6 +197,26 @@ def menu16():  # wyświetl rezerwacje
 
 
 while True:
+    print("============System zarządzania biblioteką============")
+
+    print("  1) wpisz 1 aby dodać nową książkę")
+    print("  2) wpisz 2 aby usunąć książkę")
+    print("  3) wpisz 3 aby edytować książkę")
+    print("  4) wpisz 4 aby wyświetlić informacje o książkach")
+
+    print("  5) wpisz 5 aby dodać nowego czytelnika")
+    print("  6) wpisz 6 aby usunąć czytelnika")
+    print("  7) wpisz 7 aby edytować czytelnika")
+    print("  8) wpisz 8 aby wyświetlić informacje o czytelnikach")
+
+    print("  9) wpisz 9 aby dodać nowe wypożyczenie")
+
+    print(" 13) wpisz 13 aby dodać nową rezerwację")
+    print(" 14) wpisz 14 aby usunąć rezerwację")
+    print(" 15) wpisz 15 aby edytować rezerwację")
+    print(" 16) wpisz 16 aby wyświetlić informacje o rezerwacjach")
+
+    print()
     try:
         option = int(input("wybierz menu = "))
     except ValueError:
@@ -208,12 +232,10 @@ while True:
             case 7: menu7()
             case 8: menu8()
             case 9: menu9()
-            case 10: menu10()
-            case 11: menu11()
-            case 12: menu12()
             case 13: menu13()
             case 14: menu14()
             case 15: menu15()
             case 16: menu16()
             case _: print(f"Niepoprawna opcja {option} –> wpisz liczbę całkowitą od 1 do 16")
 
+    nest = input("\nWciśnij ENTER aby przejść dalej").strip()
