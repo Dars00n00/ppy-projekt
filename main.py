@@ -50,6 +50,7 @@ def menu3():  # edytuj książkę
 
 def menu4():  # wyświetl książki
     Book.display_books()
+    Book.display_stats()
 
 
 def menu5():
@@ -101,6 +102,7 @@ def menu8():
     for person in people:
         print(count, ". ", person.id, person.fname, person.lname, person.address, person.phone)
         count += 1
+    Person.display_stats()
     nr = int(input("Wyświetl informacjie o czytelniku o numerze: "))
     print("=========Rezerwacje=========")
     for reservation in revervations:
