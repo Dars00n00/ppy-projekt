@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+import reservation
 from book import Book
 from borrowing import Borrowing
 from person import Person
@@ -133,23 +134,70 @@ def menu9():
     for person in people:
         print(count, ". ", person.id, person.fname, person.lname, person.address, person.phone)
         count += 1
-    nr_czytelnika = int(input("Wypożycza czytelnik o numerze: "))
+    nr_czytelnika = int(input("Wypożycza czytelnik o numerze: ").strip())
 
-    borrowed_book_ids = {b.id_book for b in borrowings if not b.returned}
+    borrowed_book_ids = [b.id_book for b in borrowings if not b.returned]
     available_books = [book for book in books if book.id not in borrowed_book_ids]
 
     count = 1
     for book in available_books:
         print(count, ". ", book.title)
         count += 1
-    nr_ksiazki = int(input("Wypożycza książkę o numerze: "))
+    nr_ksiazki = int(input("Wypożycza książkę o numerze: ").strip())
     date_to = input("Wypożycza do (YYYY-MM-DD): ").strip()
 
     borrowings.append(Borrowing(id_person=people[nr_czytelnika-1].id, id_book=available_books[nr_ksiazki-1].id, date_to=date_to))
     Borrowing.save(borrowings)
 
+def menu10():
+    people = Person.load()
+    borrowings = Borrowing.load()
+    reservations = Reservation.load_reservations()
+    books = Book.load_books()
+    people_ids = [person.id for person in people]
+    for p in people:
+        print(p)
+    person_id = int(input("Podaj id osoby przedłużającej wypożyczenie = ").strip())
+    if person_id not in people_ids:
+        print("brak osoby o takim id -> powrót do menu")
+        return
+    persons_borrowings = []
+    for borrowing in borrowings:
+        if borrowing.id_person == person_id:
+            persons_borrowings.append(borrowing)
+    persons_avaliable_borrowings = []
+    for persons_borrowing in persons_borrowings:
+        decision = True
+        for reservation in reservations:
+            if reservation.book_id == persons_borrowing.id_book:
+                decision = False
+        if decision:
+            persons_avaliable_borrowings.append(persons_borrowing)
+    avaliable_books = []
+    for persons_borrowing in persons_avaliable_borrowings:
+        for book in books:
+            if book.id == persons_borrowing.id_book and datetime.strptime(persons_borrowing.date_to, '%Y-%m-%d').date() >= datetime.today().date() and not persons_borrowing.returned:
+                print(book, "||| aktualne wypozyczenie do", persons_borrowing.date_to)
+                avaliable_books.append(book)
+    if len(avaliable_books) == 0:
+        print("Brak wypożyczonych książek lub są już zarezerwowane")
+        return
+    books_ids = [book.id for book in avaliable_books]
+    book_id = int(input("Podaj id książki której wypożyczenie chcesz przedłużyć = ").strip())
+    if book_id not in books_ids:
+        print("brak dostępnej książki o takim id -> powrót do menu")
+        return
+    new_date_to = input("Podaj nową datę zwrotu książki (YYYY-MM-DD) = ").strip()
 
-def menu10():  # dodaj rezerwację
+    for borrowing in borrowings:
+        if borrowing.id_book == book_id and not borrowing.returned:
+            if datetime.strptime(new_date_to, '%Y-%m-%d').date() <= datetime.strptime(borrowing.date_to, '%Y-%m-%d').date():
+                print("nowa date zwrotu nie może być wcześniejsza niż poprzednia data zwrotu -> powrót do menu")
+                return
+            borrowing.date_to = new_date_to
+    Borrowing.save(borrowings)
+
+def menu11():  # dodaj rezerwację
     people = Person.load()
     people_ids = [person.id for person in people]
     for p in people:
@@ -161,7 +209,7 @@ def menu10():  # dodaj rezerwację
 
     books = Book.load_books()
     borrowings = Borrowing.load()
-    borrowed_book_ids = {b.id_book for b in borrowings if not b.returned}
+    borrowed_book_ids = [b.id_book for b in borrowings if not b.returned]
     borrowed_books = [book for book in books if book.id in borrowed_book_ids]
     books_ids = [book.id for book in borrowed_books]
     for b in borrowed_books:
@@ -220,8 +268,9 @@ while True:
     print("  8) wpisz 8 aby wyświetlić informacje o czytelnikach")
 
     print("  9) wpisz 9 aby dodać nowe wypożyczenie")
+    print("  10) wpisz 10 aby przedłużyć wypożyczenie")
 
-    print(" 10) wpisz 10 aby dodać nową rezerwację")
+    print(" 11) wpisz 11 aby dodać nową rezerwację")
     #print(" 14) wpisz 14 aby usunąć rezerwację")
     #print(" 15) wpisz 15 aby edytować rezerwację")
     #print(" 16) wpisz 10 aby wyświetlić informacje o rezerwacjach")
@@ -243,6 +292,7 @@ while True:
             case 8: menu8()
             case 9: menu9()
             case 10: menu10()
+            case 11: menu11()
             #case 14: menu14()
             #case 15: menu15()
             #case 16: menu16()
