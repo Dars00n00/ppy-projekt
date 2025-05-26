@@ -93,7 +93,6 @@ class Person:
                     next_id = int(parts[0]) + 1
         return next_id
 
-    next_id = loadId()
 
     def __init__(self, **kwargs):
         self.errors = []
