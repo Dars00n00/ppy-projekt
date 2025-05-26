@@ -146,7 +146,7 @@ class Book(object):
     @isbn.setter
     def isbn(self, isbn: str):
         if isbn is None or not isinstance(isbn, str) or isbn.strip() == "":
-            self.errors.append(WrongBookParameterException("author", isbn))
+            self.errors.append(WrongBookParameterException("isbn", isbn))
             self._author = isbn
         else:
             self._isbn = isbn.strip()
