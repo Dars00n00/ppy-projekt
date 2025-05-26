@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
+from book import Book
 from borrowing import Borrowing
 from collections import Counter
 
-from reservation import Reservation
 
 
 class Person:
@@ -32,11 +32,40 @@ class Person:
 
     @staticmethod
     def display_person_stats(person):
-        borrowings = [brw for brw in Borrowing.load() if person.id == brw.id_person]
-        reservations = [rsr for rsr in Reservation.load_reservations() if person.id == rsr.person_id]
+        from reservation import Reservation  # wywalało błąd z cyklicznymi importami
+        books = Book.load_books()
+        borrowings = Borrowing.load()
+        reservations = Reservation.load_reservations()
 
+        id_book_to_title = {b.id: b.title for b in books}
+        person_borrowings = [brw for brw in borrowings if person.id == brw.id_person]
+        person_reservations = [rsr for rsr in reservations if person.id == rsr.person_id]
 
+        borrowings_counter = Counter(brw.id_book for brw in person_borrowings)
+        reservations_counter = Counter(rsr.book_id for rsr in person_reservations)
 
+        all_books_ids = list(set(borrowings_counter.keys()).union(set(reservations_counter.keys())))
+
+        titles = [id_book_to_title.get(b_id) for b_id in all_books_ids]
+        borrowing_counts = [borrowings_counter.get(b_id, 0) for b_id in all_books_ids]
+        reservation_counts = [reservations_counter.get(b_id, 0) for b_id in all_books_ids]
+
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
+
+        ax1.bar(titles, borrowing_counts, color="blue")
+        ax1.set_ylabel("Liczba wypożyczeń")
+        ax1.set_title("Wypożyczenia czytelnika " + person.fname + " " + person.lname)
+        ax1.grid(True, axis="y")
+
+        ax2.bar(titles, reservation_counts, color="green")
+        ax2.set_ylabel("Liczba rezerwacji")
+        ax2.set_title("Rezerwacje czytelnika " + str(person.fname) + " " + str(person.lname))
+        ax2.grid(True, axis="y")
+
+        plt.xticks(rotation=90)
+        plt.xlabel("Tytuł książki")
+        plt.tight_layout()
+        plt.show()
 
     @staticmethod
     def load():
