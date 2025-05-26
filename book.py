@@ -1,7 +1,36 @@
 from exceptions import BookParameterException, EmptyBookParameterException
+from borrowing import Borrowing
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
+from collections import Counter
 
 
 class Book(object):
+
+    @staticmethod
+    def display_stats():
+        books = Book.load_books()
+        borrowing = Borrowing.load()
+
+        counter = Counter()
+
+        for brw in borrowing:
+            if brw.returned:
+                counter[brw.id_book] += 1
+
+        id_to_title = {book.id: book.title for book in books}
+        books_ids = list(counter.keys())
+        titles = [id_to_title.get(b) for b in books_ids]
+        counts = [counter[b] for b in books_ids]
+
+        plt.bar(titles, counts, color='blue')
+        plt.xlabel("Tytuł książki")
+        plt.ylabel("liczba wypożyczeń")
+        plt.title("Częstotliwość wypożyczeń książek")
+        plt.xticks(rotation=90)
+        plt.tight_layout()
+        plt.show()
 
     @staticmethod
     def load_books():

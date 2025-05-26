@@ -8,3 +8,13 @@
 8;Mały Książę;Antoine de Saint-Exupéry;9788373271980;Znak;96
 9;Hobbit;J.R.R. Tolkien;9788373195828;Amber;320
 10;Wiedźmin: Ostatnie życzenie;Andrzej Sapkowski;9788375780633;SuperNOWA;288
+11;Sto lat samotności;Gabriel García Márquez;9780143106236;Penguin;448
+12;Złodziejka książek;Markus Zusak;9780399255373;Knopf;552
+13;Władca Pierścieni: Drużyna Pierścienia;J.R.R. Tolkien;9788373195835;Amber;432
+14;Proces;Franz Kafka;9788373272093;Greg;256
+15;Cień wiatru;Carlos Ruiz Zafón;9788373272109;Muza;496
+16;Harry Potter i Kamień Filozoficzny;J.K. Rowling;9788380793771;Media Rodzina;320
+17;Kod Leonarda da Vinci;Dan Brown;9780307474278;Doubleday;454
+18;Małe życie;Hanya Yanagihara;9781449474256;Anchor;720
+19;Anna Karenina;Lew Tołstoj;9788373272116;Greg;864
+20;Opowieść podręcznej;Margaret Atwood;9788373272123;Muza;368

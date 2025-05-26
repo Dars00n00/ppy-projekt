@@ -1,4 +1,33 @@
+import matplotlib.pyplot as plt
+
+from borrowing import Borrowing
+from collections import Counter
+
+
 class Person:
+
+    @staticmethod
+    def display_stats():
+        people = Person.load()
+        borrowing = Borrowing.load()
+
+        counter = Counter()
+
+        for brw in borrowing:
+            if brw.returned:
+                counter[brw.id_book] += 1
+
+        id_to_fullname = {p.id: p.fname + " " + p.lname for p in people}
+        ppl_ids = list(counter.keys())
+        names = [id_to_fullname.get(p) for p in ppl_ids]
+        counts = [counter[p] for p in ppl_ids]
+
+        plt.bar(names, counts, color='green')
+        plt.xlabel("Dane czytelnika")
+        plt.ylabel("Częstotliwość wypożyczeń książek")
+        plt.xticks(rotation=90)
+        plt.tight_layout()
+        plt.show()
 
     @staticmethod
     def load():
