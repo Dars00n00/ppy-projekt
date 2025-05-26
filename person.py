@@ -89,16 +89,23 @@ class Person:
         with open("personData.txt", 'r', encoding='utf-8') as f:
             for line in f:
                 parts = line.strip().split(';')
-                if int(parts[0]) > next_id:
+                if int(parts[0]) >= next_id:
                     next_id = int(parts[0]) + 1
         return next_id
 
+    @staticmethod
+    def next_id(self):
+        people = Person.load()
+        if not people:
+            return 1
+        ids = [book.id for book in people]
+        return max(ids) + 1
     next_id = loadId()
 
     def __init__(self, **kwargs):
         self.errors = []
         if kwargs.get("id"):
-            self._id = kwargs["id"]
+            self._id = kwargs.get("id")
         else:
             self._id = Person.next_id
             Person.next_id += 1

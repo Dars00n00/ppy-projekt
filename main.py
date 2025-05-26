@@ -18,6 +18,7 @@ def menu1():  # dodaj książkę
         books = Book.load_books()
         books.append(b)
         Book.save_changes(books)
+        print("dodano nową książkę: " + str(b))
     except MultipleErrorsException as e:
         print("błąd podczas dodawania nowej książki:\n" + str(e))
     except WrongBookParameterException as e:
@@ -45,14 +46,19 @@ def menu3():  # edytuj książkę
             arg = input("nowy " + opt + " = ")
             kwargs.append(arg.strip())
 
-        b = Book(title=kwargs[0],
+        b = Book(id=arg_id, title=kwargs[0],
                  author=kwargs[1],
                  isbn=kwargs[2],
                  publisher=kwargs[3],
                  pages=kwargs[4])
         Book.edit_book(arg_id, b)
-    except ValueError:
-        print("podaj liczbę")
+        print("książka po edycji: " + str(b))
+    except MultipleErrorsException as e:
+        print("błąd podczas edycji książki:\n" + str(e))
+    except WrongBookParameterException as e:
+        print("błąd podczas edycji książki -> " + str(e))
+    except Exception:
+        pass
 
 
 def menu4():  # wyświetl książki
@@ -290,7 +296,7 @@ while True:
     print("  10) wpisz 10 aby przedłużyć wypożyczenie")
     print("  11) wpisz 11 aby zwrócić książkę")
 
-    print(" 12) wpisz 11 aby dodać nową rezerwację")
+    print("  12) wpisz 12 aby dodać nową rezerwację")
 
     print()
     try:

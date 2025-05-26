@@ -32,7 +32,7 @@ class Borrowing:
                 self._returned = False
         else:
             self._date_from = datetime.today().date().isoformat()
-            self.returned = False
+            self._returned = False
         self.date_to = kwargs.get("date_to")
 
     def calculate_fee(self):

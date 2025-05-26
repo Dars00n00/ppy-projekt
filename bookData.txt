@@ -18,4 +18,3 @@
 18;Małe życie;Hanya Yanagihara;9781449474256;Anchor;720
 19;Anna Karenina;Lew Tołstoj;9788373272116;Greg;864
 20;Opowieść podręcznej;Margaret Atwood;9788373272123;Muza;368
-21;sdf;sdfs;dfs;sdgsdg;123
