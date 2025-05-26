@@ -161,22 +161,20 @@ def menu10():
     if person_id not in people_ids:
         print("brak osoby o takim id -> powrót do menu")
         return
-    persons_borrowings = []
-    for borrowing in borrowings:
-        if borrowing.id_person == person_id:
-            persons_borrowings.append(borrowing)
+    persons_borrowings = [b for b in borrowings if b.id_person == person_id]
     persons_avaliable_borrowings = []
     for persons_borrowing in persons_borrowings:
-        decision = True
-        for reservation in reservations:
-            if reservation.book_id == persons_borrowing.id_book:
-                decision = False
-        if decision:
-            persons_avaliable_borrowings.append(persons_borrowing)
+        if not persons_borrowing.returned:
+            decision = True
+            for reservation in reservations:
+                if reservation.book_id == persons_borrowing.id_book:
+                    decision = False
+            if decision:
+                persons_avaliable_borrowings.append(persons_borrowing)
     avaliable_books = []
     for persons_borrowing in persons_avaliable_borrowings:
         for book in books:
-            if book.id == persons_borrowing.id_book and datetime.strptime(persons_borrowing.date_to, '%Y-%m-%d').date() >= datetime.today().date() and not persons_borrowing.returned:
+            if book.id == persons_borrowing.id_book and datetime.strptime(persons_borrowing.date_to, '%Y-%m-%d').date() >= datetime.today().date():
                 print(book, "||| aktualne wypozyczenie do", persons_borrowing.date_to)
                 avaliable_books.append(book)
     if len(avaliable_books) == 0:
@@ -188,7 +186,6 @@ def menu10():
         print("brak dostępnej książki o takim id -> powrót do menu")
         return
     new_date_to = input("Podaj nową datę zwrotu książki (YYYY-MM-DD) = ").strip()
-
     for borrowing in borrowings:
         if borrowing.id_book == book_id and not borrowing.returned:
             if datetime.strptime(new_date_to, '%Y-%m-%d').date() <= datetime.strptime(borrowing.date_to, '%Y-%m-%d').date():
