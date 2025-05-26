@@ -30,9 +30,9 @@ class Reservation:
     def add_reservation(**kwargs):
         reservations = Reservation.load_reservations()
         new_reservation = Reservation(id=Reservation.next_id(), **kwargs)
-        #print(new_reservation)
         reservations.append(new_reservation)
         Reservation.save_changes(reservations)
+        print("dodano rezerwację: " + str(new_reservation))
 
     @staticmethod
     def remove_reservation(id_rmv):
@@ -72,7 +72,6 @@ class Reservation:
         else:
             return int(sorted(ids)[-1])+1
 
-
     def __init__(self, **kwargs):
         self.id = kwargs.get("id")
         self.person_id = kwargs.get("person_id")
@@ -81,41 +80,41 @@ class Reservation:
         self.end_date = kwargs.get("end_date")
 
     @property
-    def id(self):
+    def id(self) -> int:
         return self._id
 
     @id.setter
-    def id(self, id):
+    def id(self, id: int):
         if id is None or not isinstance(id, int):
             raise EmptyReservationParameterException("id")
         self._id = id
 
     @property
-    def person_id(self):
+    def person_id(self) -> int:
         return self._person_id
 
     @person_id.setter
-    def person_id(self, person_id):
+    def person_id(self, person_id: int):
         if person_id is None or not isinstance(person_id, int):
             raise EmptyReservationParameterException("person_id")
         self._person_id = person_id
 
     @property
-    def book_id(self):
+    def book_id(self) -> int:
         return self._book_id
 
     @book_id.setter
-    def book_id(self, book_id):
+    def book_id(self, book_id: int):
         if book_id is None or not isinstance(book_id, int):
             raise EmptyReservationParameterException("book_id")
         self._book_id = book_id
 
     @property
-    def begin_date(self):
+    def begin_date(self) -> date:
         return self._begin_date
 
     @begin_date.setter
-    def begin_date(self, begin_date):
+    def begin_date(self, begin_date: str):
         if begin_date is None:
             raise EmptyReservationParameterException("begin_date")
         if isinstance(begin_date, str):
@@ -128,11 +127,11 @@ class Reservation:
         self._begin_date = begin_date
 
     @property
-    def end_date(self):
+    def end_date(self) -> date:
         return self._end_date
 
     @end_date.setter
-    def end_date(self, end_date):
+    def end_date(self, end_date: str):
         if end_date is None:
             raise EmptyReservationParameterException("end_date")
         if isinstance(end_date, str):
