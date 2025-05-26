@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+import borrowing
 import reservation
 from book import Book
 from borrowing import Borrowing
@@ -194,7 +195,37 @@ def menu10():
             borrowing.date_to = new_date_to
     Borrowing.save(borrowings)
 
-def menu11():  # dodaj rezerwację
+def menu11():
+    people = Person.load()
+    people_ids = [person.id for person in people]
+    for p in people:
+        print(p)
+    person_id = int(input("Podaj id osoby zwracającej = ").strip())
+    if person_id not in people_ids:
+        print("brak osoby o takim id -> powrót do menu")
+        return
+    borrowings = Borrowing.load()
+    books = Book.load_books()
+    books_ids = []
+    persons_borrowings = [b for b in borrowings if b.id_person == person_id]
+    for persons_borrowing in persons_borrowings:
+        for book in books:
+            if book.id == persons_borrowing.id_book and not persons_borrowing.returned:
+                books_ids.append(book.id)
+                print(book, "||| Opłata: ", Borrowing.calculate_fee(persons_borrowing))
+    if not books_ids:
+        print("brak książek do zwrotu -> powrót do menu")
+        return
+    book_id = int(input("Podaj id ksiązki do zwrotu = ").strip())
+    if book_id not in books_ids:
+        print("brak książki o takim id -> powrót do menu")
+        return
+    for borrowing in borrowings:
+        if borrowing.id_book == book_id and not borrowing.returned:
+            borrowing.returned = True
+    Borrowing.save(borrowings)
+
+def menu12():  # dodaj rezerwację
     people = Person.load()
     people_ids = [person.id for person in people]
     for p in people:
@@ -233,24 +264,6 @@ def menu11():  # dodaj rezerwację
         begin_date=parsedBegin.strftime("%Y-%m-%d"),
         end_date=pasrsedEnd.strftime("%Y-%m-%d"),)
 
-
-def menu14():  # usuń rezerwację
-    reservations = Reservation.load_reservations()
-    for r in reservations:
-        print(r)
-    reservation_id = int(input("wybierz numer rezerwacji do usunięcia = "))
-    removed = Reservation.remove_reservation(reservation_id - 1)
-    print(f"usunięto rezerwację {removed}")
-
-
-def menu15():  # znajdź rezerwację
-    print("Wyszukiwanie rezerwacji...")
-
-
-def menu16():  # wyświetl rezerwacje
-    Reservation.display_reservations()
-
-
 while True:
     print("============System zarządzania biblioteką============")
 
@@ -266,11 +279,9 @@ while True:
 
     print("  9) wpisz 9 aby dodać nowe wypożyczenie")
     print("  10) wpisz 10 aby przedłużyć wypożyczenie")
+    print("  11) wpisz 11 aby zwrócić książkę")
 
-    print(" 11) wpisz 11 aby dodać nową rezerwację")
-    #print(" 14) wpisz 14 aby usunąć rezerwację")
-    #print(" 15) wpisz 15 aby edytować rezerwację")
-    #print(" 16) wpisz 10 aby wyświetlić informacje o rezerwacjach")
+    print(" 12) wpisz 11 aby dodać nową rezerwację")
 
     print()
     try:
@@ -290,6 +301,7 @@ while True:
             case 9: menu9()
             case 10: menu10()
             case 11: menu11()
+            case 12: menu12()
             #case 14: menu14()
             #case 15: menu15()
             #case 16: menu16()
