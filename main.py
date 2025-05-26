@@ -206,13 +206,13 @@ def menu11():  # dodaj rezerwację
 
     books = Book.load_books()
     borrowings = Borrowing.load()
-    borrowed_book_ids = [b.id_book for b in borrowings if not b.returned]
+    borrowed_book_ids = [b.id_book for b in borrowings if not b.returned and datetime.strptime(b.date_to, '%Y-%m-%d').date() > datetime.today().date()]
     borrowed_books = [book for book in books if book.id in borrowed_book_ids]
     books_ids = [book.id for book in borrowed_books]
-    for b in borrowed_books:
-        print(b, end="")
+    for borrowed_book in borrowed_books:
+        print(borrowed_book, end="")
         for borrowing in borrowings:
-            if b.id == borrowing.id_book and borrowing.returned == False:
+            if borrowed_book.id == borrowing.id_book and borrowing.returned == False:
                 print(" |||| Dostępna od", borrowing.date_to)
     book_id = int(input("Podaj id książki do rezerwacji = ").strip())
     if book_id not in books_ids:
