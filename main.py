@@ -187,7 +187,7 @@ def menu10():
             if book.id == persons_borrowing.id_book and datetime.strptime(persons_borrowing.date_to, '%Y-%m-%d').date() >= datetime.today().date():
                 print(book, "||| aktualne wypozyczenie do", persons_borrowing.date_to)
                 avaliable_books.append(book)
-    if len(avaliable_books) == 0:
+    if not avaliable_books:
         print("Brak wypożyczonych książek lub są już zarezerwowane")
         return
     books_ids = [book.id for book in avaliable_books]

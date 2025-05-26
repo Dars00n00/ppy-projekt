@@ -67,3 +67,7 @@ class NoReservationFoundException(Exception):
 class NoBorrowingFoundException(Exception):
     def __init__(self, id_borrowing: Union[int, str]):
         super().__init__(f"nie znaleziono wypożyczenia o id {str(id_borrowing)}")
+
+class EmptyCollectionException(Exception):
+    def __init__(self, msg):
+        super().__init__(msg)
