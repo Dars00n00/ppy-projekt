@@ -74,7 +74,7 @@ class Book(object):
         self.pages = kwargs.get("pages")
 
     @property
-    def id(self):
+    def id(self) -> int:
         return self._id
 
     @id.setter
@@ -83,7 +83,7 @@ class Book(object):
             self._id = int(id)
 
     @property
-    def title(self):
+    def title(self) -> str:
         return self._title
 
     @title.setter
@@ -95,7 +95,7 @@ class Book(object):
         self._title = title.strip()
 
     @property
-    def author(self):
+    def author(self) -> str:
         return self._author
 
     @author.setter
@@ -107,7 +107,7 @@ class Book(object):
         self._author = author.strip()
 
     @property
-    def isbn(self):
+    def isbn(self) -> str:
         return self._isbn.strip()
 
     @isbn.setter
@@ -119,7 +119,7 @@ class Book(object):
         self._isbn = isbn.strip()
 
     @property
-    def publisher(self):
+    def publisher(self) -> str:
         return self._publisher
 
     @publisher.setter
@@ -131,7 +131,7 @@ class Book(object):
         self._publisher = publisher.strip()
 
     @property
-    def pages(self):
+    def pages(self) -> int:
         return self._pages
 
     @pages.setter

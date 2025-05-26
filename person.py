@@ -40,7 +40,7 @@ class Person:
         self.phone = kwargs.get("phone")
 
     @property
-    def id(self):
+    def id(self) -> int:
         return self._id
 
     @id.setter
@@ -48,7 +48,7 @@ class Person:
         raise AttributeError('ID cannot be changed')
 
     @property
-    def fname(self):
+    def fname(self) -> str:
         return self._fname
 
     @fname.setter
@@ -58,7 +58,7 @@ class Person:
         self._fname = fname
 
     @property
-    def lname(self):
+    def lname(self) -> str:
         return self._lname
 
     @lname.setter
@@ -68,7 +68,7 @@ class Person:
         self._lname = lname
 
     @property
-    def address(self):
+    def address(self) -> str:
         return self._address
 
     @address.setter
@@ -78,7 +78,7 @@ class Person:
         self._address = address
 
     @property
-    def phone(self):
+    def phone(self) -> str:
         return self._phone
 
     @phone.setter

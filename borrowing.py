@@ -41,7 +41,7 @@ class Borrowing:
         return self.late_return_fee_per_day * max(days_late, 0)
 
     @property
-    def id_person(self):
+    def id_person(self) -> int:
         return self._id_person
 
     @id_person.setter
@@ -51,7 +51,7 @@ class Borrowing:
         self._id_person = id_person
 
     @property
-    def id_book(self):
+    def id_book(self) -> int:
         return self._id_book
 
     @id_book.setter
@@ -61,7 +61,7 @@ class Borrowing:
         self._id_book = id_book
 
     @property
-    def date_from(self):
+    def date_from(self) -> str:
         return self._date_from
 
     @date_from.setter
@@ -69,7 +69,7 @@ class Borrowing:
         raise AttributeError('From date cannot be changed')
 
     @property
-    def date_to(self):
+    def date_to(self) -> str:
         return self._date_to
 
     @date_to.setter
@@ -86,7 +86,7 @@ class Borrowing:
         self._date_to = date_to
 
     @property
-    def returned(self):
+    def returned(self) -> bool:
         return self._returned
 
     @returned.setter

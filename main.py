@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from book import Book
 from borrowing import Borrowing
 from person import Person
@@ -115,9 +117,9 @@ def menu8():
                 if book.id == borrowing.id_book:
                     print(book.title, "od" , borrowing.date_from, "do", borrowing.date_to, end="")
                     if borrowing.returned == True:
-                        print("| zwrócona")
+                        print(" | zwrócona")
                     else:
-                        print("| niezwrócona")
+                        print(" | niezwrócona")
 
 
 def menu9():
@@ -145,7 +147,7 @@ def menu9():
     Borrowing.save(borrowings)
 
 
-def menu13():  # dodaj rezerwację
+def menu10():  # dodaj rezerwację
     people = Person.load()
     people_ids = [person.id for person in people]
     for p in people:
@@ -158,23 +160,31 @@ def menu13():  # dodaj rezerwację
     books = Book.load_books()
     borrowings = Borrowing.load()
     borrowed_book_ids = {b.id_book for b in borrowings if not b.returned}
-    available_books = [book for book in books if book.id not in borrowed_book_ids]
-    books_ids = [book.id for book in available_books]
-    for b in available_books:
-        print(b)
+    borrowed_books = [book for book in books if book.id in borrowed_book_ids]
+    books_ids = [book.id for book in borrowed_books]
+    for b in borrowed_books:
+        print(b, end="")
+        for borrowing in borrowings:
+            if b.id == borrowing.id_book and borrowing.returned == False:
+                print(" |||| Dostępna od", borrowing.date_to)
     book_id = int(input("Podaj id książki do rezerwacji = ").strip())
     if book_id not in books_ids:
         print("brak książki o takim id -> powrót do menu")
         return
 
-    begin_date = input("Podaj datę rozpoczęcia rezerwacji (YYYY-MM-DD) = ").strip()
-    end_date = input("Podaj datę zakończenia rezerwacji (YYYY-MM-DD) = ").strip()
+    begin_date = ""
+    for borrowing in borrowings:
+        if book_id == borrowing.id_book and borrowing.returned == False:
+            begin_date = borrowing.date_to
+
+    parsedBegin = datetime.strptime(begin_date, '%Y-%m-%d').date()
+    pasrsedEnd = parsedBegin + timedelta(days=3)
 
     Reservation.add_reservation(
         person_id=person_id,
         book_id=book_id,
-        begin_date=begin_date,
-        end_date=end_date)
+        begin_date=parsedBegin.strftime("%Y-%m-%d"),
+        end_date=pasrsedEnd.strftime("%Y-%m-%d"),)
 
 
 def menu14():  # usuń rezerwację
@@ -230,7 +240,7 @@ while True:
             case 7: menu7()
             case 8: menu8()
             case 9: menu9()
-            case 10: menu13()
+            case 10: menu10()
             #case 14: menu14()
             #case 15: menu15()
             #case 16: menu16()
