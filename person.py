@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
-
 from borrowing import Borrowing
 from collections import Counter
+
+from reservation import Reservation
 
 
 class Person:
@@ -28,6 +29,14 @@ class Person:
         plt.xticks(rotation=90)
         plt.tight_layout()
         plt.show()
+
+    @staticmethod
+    def display_person_stats(person):
+        borrowings = [brw for brw in Borrowing.load() if person.id == brw.id_person]
+        reservations = [rsr for rsr in Reservation.load_reservations() if person.id == rsr.person_id]
+
+
+
 
     @staticmethod
     def load():

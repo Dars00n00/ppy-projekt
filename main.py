@@ -65,10 +65,10 @@ def menu5():
 
 def menu6():
     people = Person.load()
-    count = 1
-    for person in people:
+    #count = 1
+    for count, person in enumerate(people, start=1):
         print(count,  ". ", person.id, person.fname, person.lname, person.address, person.phone)
-        count += 1
+        #count += 1
     nr = int(input("Usuń czytelnika o numerze: "))
     del people[nr-1]
     Person.save(people)
@@ -76,10 +76,10 @@ def menu6():
 
 def menu7():
     people = Person.load()
-    count = 1
-    for person in people:
+    #count = 1
+    for count, person in enumerate(people, start=1):
         print(count, ". ", person.id, person.fname, person.lname, person.address, person.phone)
-        count += 1
+        #count += 1
     nr = int(input("Edytuj czytelnika o numerze: "))
     fname = input("Podaj imie: ").strip()
     people[nr - 1].fname = fname
@@ -99,9 +99,9 @@ def menu8():
     revervations = Reservation.load_reservations()
 
     count = 1
-    for person in people:
+    for count, person in enumerate(people, start=1):
         print(count, ". ", person.id, person.fname, person.lname, person.address, person.phone)
-        count += 1
+        #count += 1
     Person.display_stats()
     nr = int(input("Wyświetl informacjie o czytelniku o numerze: "))
     print("=========Rezerwacje=========")
@@ -120,6 +120,7 @@ def menu8():
                         print("| zwrócona")
                     else:
                         print("| niezwrócona")
+    Person.display_person_stats(people[nr-1])
 
 
 def menu9():
@@ -136,10 +137,10 @@ def menu9():
     borrowed_book_ids = {b.id_book for b in borrowings if not b.returned}
     available_books = [book for book in books if book.id not in borrowed_book_ids]
 
-    count = 1
-    for book in available_books:
+    #count = 1
+    for count, book in enumerate(available_books, start=1):
         print(count, ". ", book.title)
-        count += 1
+        #count += 1
     nr_ksiazki = int(input("Wypożycza książkę o numerze: "))
     date_to = input("Wypożycza do (YYYY-MM-DD): ").strip()
 
