@@ -1,6 +1,4 @@
 from datetime import datetime, timedelta
-import borrowing
-import reservation
 from book import Book
 from borrowing import Borrowing
 from exceptions import WrongPersonParameterException, MultipleErrorsException, WrongBookParameterException
@@ -24,7 +22,6 @@ def menu1():  # dodaj książkę
         print("błąd podczas dodawania nowej książki:\n" + str(e))
     except WrongBookParameterException as e:
         print("błąd podczas dodawania nowej książki -> " + str(e))
-
 
 
 def menu2():  # usuń książkę
@@ -73,6 +70,7 @@ def menu5():
         p = Person(fname=fname, lname=lname, address=address, phone=phone)
         people.append(p)
         Person.save(people)
+        print("dodano nowego czytelnika: " + str(p))
     except MultipleErrorsException as e:
         print(str(e))
     except WrongPersonParameterException as e:
@@ -116,6 +114,7 @@ def menu8():
         print(count, ". ", person.id, person.fname, person.lname, person.address, person.phone)
     Person.display_stats()
     nr = int(input("Wyświetl informacjie o czytelniku o numerze: "))
+    Person.display_person_stats(people[nr-1]) ######################## wazne nie usuwaj shdas
     print("=========Rezerwacje=========")
     for reservation in reservations:
         if people[nr - 1].id == reservation.person_id:

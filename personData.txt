@@ -8,3 +8,4 @@
 8;Magdalena;Lewandowska;ul. Lipowa 9, 60-100 Poznań;601987654
 9;Piotr;Zieliński;ul. Polna 2, 50-321 Wrocław;723456789
 10;Ewa;Kamińska;ul. Słoneczna 17, 20-400 Lublin;654987321
+

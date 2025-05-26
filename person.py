@@ -97,7 +97,6 @@ class Person:
 
     def __init__(self, **kwargs):
         self.errors = []
-
         if kwargs.get("id"):
             self._id = kwargs["id"]
         else:
@@ -117,7 +116,8 @@ class Person:
 
     @id.setter
     def id(self, id):
-        raise AttributeError('ID cannot be changed')
+        self.errors.append(WrongPersonParameterException("id", "id cannot be changed"))
+        #raise AttributeError('ID cannot be changed')
 
     @property
     def fname(self) -> str:
