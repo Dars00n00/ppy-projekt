@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from book import Book
 from borrowing import Borrowing
 from collections import Counter
-from exceptions import WrongPersonParameterException, MultiplePersonErrorsException
+from exceptions import WrongPersonParameterException, MultipleErrorsException
 
 
 class Person:
@@ -109,7 +109,7 @@ class Person:
         self.phone = kwargs.get("phone")
 
         if len(self.errors) > 0:
-            raise MultiplePersonErrorsException(self.errors)
+            raise MultipleErrorsException(self.errors)
 
     @property
     def id(self) -> int:
@@ -127,7 +127,6 @@ class Person:
     def fname(self, fname):
         if not fname or not fname.isalpha():
             self.errors.append(WrongPersonParameterException("fname", str(fname)))
-            #raise ValueError('First name cannot be empty and can contain only letters')
         self._fname = fname
 
     @property
@@ -138,7 +137,6 @@ class Person:
     def lname(self, lname):
         if not lname or not lname.isalpha():
             self.errors.append(WrongPersonParameterException("lname", str(lname)))
-            #raise ValueError('Last name cannot be empty and can contain only letters')
         self._lname = lname
 
     @property
@@ -149,7 +147,6 @@ class Person:
     def address(self, address):
         if not address:
             self.errors.append(WrongPersonParameterException("address", str(address)))
-            #raise ValueError('Address cannot be empty')
         self._address = address
 
     @property
@@ -160,7 +157,6 @@ class Person:
     def phone(self, phone):
         if not phone.isdigit() or len(phone) != 9:
             self.errors.append(WrongPersonParameterException("phone", str(phone)))
-            #raise ValueError('Phone number has to be 9 digits')
         self._phone = phone
 
     def __str__(self):

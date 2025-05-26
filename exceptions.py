@@ -3,26 +3,34 @@ from typing import Union
 
 # =======================  wrong parameter exceptions =======================
 class WrongBookParameterException(Exception):
-    def __init__(self, field_name: str, field_value: str):
-        super().__init__(f"błędne lub puste pole {field_name} = {field_value}")
+    def __init__(self, param_name: str, param_value):
+        self.param_name = param_name
+        self.param_value = param_value
+
+    def __str__(self):
+        if self.param_value is None or str(self.param_value).strip() == "":
+            value_str = '""'
+        else:
+            value_str = str(self.param_value)
+        return f"błędne lub puste pole ({self.param_name}) = {value_str}"
 
 
 class WrongPersonParameterException(Exception):
     def __init__(self, field_name: str, field_value: str):
-        super().__init__(f"błędne lub puste pole {field_name} = {field_value}")
+        super().__init__(f"błędne lub puste pole ({field_name}) = {field_value}")
 
 
 class WrongReservationParameterException(Exception):
     def __init__(self, field_name: str, field_value: str):
-        super().__init__(f"błędne lub puste pole {field_name} = {field_value}")
+        super().__init__(f"błędne lub puste pole ({field_name}) = {field_value}")
 
 
 class WrongBorrowingParameterException(Exception):
     def __init__(self, field_name: str, field_value: str):
-        super().__init__(f"błędne lub puste pole {field_name} = {field_value}")
+        super().__init__(f"błędne lub puste pole ({field_name}) = {field_value}")
 
 
-class MultiplePersonErrorsException(Exception):
+class MultipleErrorsException(Exception):
     def __init__(self, errors: list):
         message = "\n".join(str(e) for e in errors)
         super().__init__(message)

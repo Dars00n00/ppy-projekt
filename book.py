@@ -1,4 +1,4 @@
-from exceptions import WrongBookParameterException
+from exceptions import WrongBookParameterException, MultipleErrorsException
 from borrowing import Borrowing
 import matplotlib
 matplotlib.use('TkAgg')
@@ -52,7 +52,8 @@ class Book(object):
     @staticmethod
     def add_book(**kwargs):
         books = Book.load_books()
-        new_book = Book(id=Book.__next_id(), **kwargs)
+        print(books)
+        new_book = Book(id=Book.next_id(), **kwargs)
         books.append(new_book)
         Book.save_changes(books)
         print("Dodano nową książkę: " + str(new_book))
@@ -61,7 +62,6 @@ class Book(object):
     def remove_book(id_rmv):
         books = Book.load_books()
         for list_index, book in enumerate(books):
-            #print(list_index, book)
             if id_rmv == book.id:
                 removed = books.pop(list_index)
                 print("Usunięto książkę " + str(removed))
@@ -84,23 +84,24 @@ class Book(object):
             print(book)
 
     @staticmethod
-    def __next_id() -> int:
-        ids = []
-        for book in Book.load_books():
-            ids.append(book.id)
-        return sorted(ids)[-1]+1
+    def next_id() -> int:
+        books = Book.load_books()
+        if not books:
+            return 1
+        ids = [book.id for book in books]
+        return max(ids) + 1
 
     def __init__(self, **kwargs):
-        if kwargs.get("id"):
-            self.id = kwargs.get("id")
-        else:
-            self.id = self.__next_id()
-
+        self.errors = []
+        self.id = kwargs.get("id")
         self.title = kwargs.get("title")
         self.author = kwargs.get("author")
         self.isbn = kwargs.get("isbn")
         self.publisher = kwargs.get("publisher")
         self.pages = kwargs.get("pages")
+
+        if len(self.errors) > 0:
+            raise MultipleErrorsException(self.errors)
 
     @property
     def id(self) -> int:
@@ -108,55 +109,56 @@ class Book(object):
 
     @id.setter
     def id(self, id):
-        if id is None or id is not isinstance(id, int):
+        try:
             self._id = int(id)
+        except (ValueError, TypeError):
+            self.errors.append(WrongBookParameterException("id", id))
+            self._id = id
 
     @property
     def title(self) -> str:
         return self._title
 
     @title.setter
-    def title(self, title):
-        if title is None or not isinstance(title, str):
-            raise WrongBookParameterException("title", str(title))
-        if len(title.strip()) <= 0:
-            raise WrongBookParameterException("title", "brak")
-        self._title = title.strip()
+    def title(self, title: str):
+        if title is None or not isinstance(title, str) or title.strip() == "":
+            self.errors.append(WrongBookParameterException("title", title))
+            self._title = title
+        else:
+            self._title = title.strip()
 
     @property
     def author(self) -> str:
         return self._author
 
     @author.setter
-    def author(self, author):
-        if author is None or not isinstance(author, str):
-            raise WrongBookParameterException("author", str(author))
-        if len(author.strip()) <= 0:
-            raise WrongBookParameterException("author", "brak")
-        self._author = author.strip()
+    def author(self, author: str):
+        if author is None or not isinstance(author, str) or author.strip() == "":
+            self.errors.append(WrongBookParameterException("author", author))
+            self._author = author
+        else:
+            self._author = author.strip()
 
     @property
     def isbn(self) -> str:
-        return self._isbn.strip()
+        return self._isbn
 
     @isbn.setter
-    def isbn(self, isbn):
-        if isbn is None or not isinstance(isbn, str):
-            raise WrongBookParameterException("isbn", str(isbn))
-        if len(isbn.strip()) <= 0:
-            raise WrongBookParameterException("isbn", "brak")
-        self._isbn = isbn.strip()
+    def isbn(self, isbn: str):
+        if isbn is None or not isinstance(isbn, str) or isbn.strip() == "":
+            self.errors.append(WrongBookParameterException("author", isbn))
+            self._author = isbn
+        else:
+            self._isbn = isbn.strip()
 
     @property
     def publisher(self) -> str:
         return self._publisher
 
     @publisher.setter
-    def publisher(self, publisher):
-        if publisher is None or not isinstance(publisher, str):
-            raise WrongBookParameterException("publisher")
-        if len(publisher.strip()) <= 0:
-            raise WrongBookParameterException("empty publisher field")
+    def publisher(self, publisher: str):
+        if not publisher or not isinstance(publisher, str) or publisher.isspace():
+            self.errors.append(WrongBookParameterException("publisher", publisher))
         self._publisher = publisher.strip()
 
     @property
@@ -167,10 +169,10 @@ class Book(object):
     def pages(self, pages):
         try:
             pages = int(pages)
+            if pages <= 0:
+                self.errors.append(WrongBookParameterException("pages", str(pages)))
         except (ValueError, TypeError):
-            raise WrongBookParameterException(f"wrong number ({pages}) of pages")
-        if pages <= 0:
-            raise WrongBookParameterException(f"wrong number ({pages}) of pages")
+            self.errors.append(WrongBookParameterException("pages", pages))
         self._pages = pages
 
     def __str__(self):
