@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+import borrowing
+import reservation
 from book import Book
 from borrowing import Borrowing
 from exceptions import WrongPersonParameterException, MultipleErrorsException, WrongBookParameterException
@@ -169,22 +171,20 @@ def menu10():
     if person_id not in people_ids:
         print("brak osoby o takim id -> powrót do menu")
         return
-    persons_borrowings = []
-    for borrowing in borrowings:
-        if borrowing.id_person == person_id:
-            persons_borrowings.append(borrowing)
+    persons_borrowings = [b for b in borrowings if b.id_person == person_id]
     persons_avaliable_borrowings = []
     for persons_borrowing in persons_borrowings:
-        decision = True
-        for reservation in reservations:
-            if reservation.book_id == persons_borrowing.id_book:
-                decision = False
-        if decision:
-            persons_avaliable_borrowings.append(persons_borrowing)
+        if not persons_borrowing.returned:
+            decision = True
+            for reservation in reservations:
+                if reservation.book_id == persons_borrowing.id_book:
+                    decision = False
+            if decision:
+                persons_avaliable_borrowings.append(persons_borrowing)
     avaliable_books = []
     for persons_borrowing in persons_avaliable_borrowings:
         for book in books:
-            if book.id == persons_borrowing.id_book and datetime.strptime(persons_borrowing.date_to, '%Y-%m-%d').date() >= datetime.today().date() and not persons_borrowing.returned:
+            if book.id == persons_borrowing.id_book and datetime.strptime(persons_borrowing.date_to, '%Y-%m-%d').date() >= datetime.today().date():
                 print(book, "||| aktualne wypozyczenie do", persons_borrowing.date_to)
                 avaliable_books.append(book)
     if len(avaliable_books) == 0:
@@ -196,7 +196,6 @@ def menu10():
         print("brak dostępnej książki o takim id -> powrót do menu")
         return
     new_date_to = input("Podaj nową datę zwrotu książki (YYYY-MM-DD) = ").strip()
-
     for borrowing in borrowings:
         if borrowing.id_book == book_id and not borrowing.returned:
             if datetime.strptime(new_date_to, '%Y-%m-%d').date() <= datetime.strptime(borrowing.date_to, '%Y-%m-%d').date():
@@ -206,7 +205,37 @@ def menu10():
     Borrowing.save(borrowings)
 
 
-def menu11():  # dodaj rezerwację
+def menu11():
+    people = Person.load()
+    people_ids = [person.id for person in people]
+    for p in people:
+        print(p)
+    person_id = int(input("Podaj id osoby zwracającej = ").strip())
+    if person_id not in people_ids:
+        print("brak osoby o takim id -> powrót do menu")
+        return
+    borrowings = Borrowing.load()
+    books = Book.load_books()
+    books_ids = []
+    persons_borrowings = [b for b in borrowings if b.id_person == person_id]
+    for persons_borrowing in persons_borrowings:
+        for book in books:
+            if book.id == persons_borrowing.id_book and not persons_borrowing.returned:
+                books_ids.append(book.id)
+                print(book, "||| Opłata: ", Borrowing.calculate_fee(persons_borrowing))
+    if not books_ids:
+        print("brak książek do zwrotu -> powrót do menu")
+        return
+    book_id = int(input("Podaj id ksiązki do zwrotu = ").strip())
+    if book_id not in books_ids:
+        print("brak książki o takim id -> powrót do menu")
+        return
+    for borrowing in borrowings:
+        if borrowing.id_book == book_id and not borrowing.returned:
+            borrowing.returned = True
+    Borrowing.save(borrowings)
+
+def menu12():  # dodaj rezerwację
     people = Person.load()
     people_ids = [person.id for person in people]
     for p in people:
@@ -218,13 +247,13 @@ def menu11():  # dodaj rezerwację
 
     books = Book.load_books()
     borrowings = Borrowing.load()
-    borrowed_book_ids = [b.id_book for b in borrowings if not b.returned]
+    borrowed_book_ids = [b.id_book for b in borrowings if not b.returned and datetime.strptime(b.date_to, '%Y-%m-%d').date() > datetime.today().date()]
     borrowed_books = [book for book in books if book.id in borrowed_book_ids]
     books_ids = [book.id for book in borrowed_books]
-    for b in borrowed_books:
-        print(b, end="")
+    for borrowed_book in borrowed_books:
+        print(borrowed_book, end="")
         for borrowing in borrowings:
-            if b.id == borrowing.id_book and borrowing.returned == False:
+            if borrowed_book.id == borrowing.id_book and borrowing.returned == False:
                 print(" |||| Dostępna od", borrowing.date_to)
     book_id = int(input("Podaj id książki do rezerwacji = ").strip())
     if book_id not in books_ids:
@@ -245,24 +274,6 @@ def menu11():  # dodaj rezerwację
         begin_date=parsedBegin.strftime("%Y-%m-%d"),
         end_date=pasrsedEnd.strftime("%Y-%m-%d"),)
 
-
-def menu14():  # usuń rezerwację
-    reservations = Reservation.load_reservations()
-    for r in reservations:
-        print(r)
-    reservation_id = int(input("wybierz numer rezerwacji do usunięcia = "))
-    removed = Reservation.remove_reservation(reservation_id - 1)
-    print(f"usunięto rezerwację {removed}")
-
-
-def menu15():  # znajdź rezerwację
-    print("Wyszukiwanie rezerwacji...")
-
-
-def menu16():  # wyświetl rezerwacje
-    Reservation.display_reservations()
-
-
 while True:
     print("============System zarządzania biblioteką============")
 
@@ -278,11 +289,9 @@ while True:
 
     print("  9) wpisz 9 aby dodać nowe wypożyczenie")
     print("  10) wpisz 10 aby przedłużyć wypożyczenie")
+    print("  11) wpisz 11 aby zwrócić książkę")
 
-    print(" 11) wpisz 11 aby dodać nową rezerwację")
-    #print(" 14) wpisz 14 aby usunąć rezerwację")
-    #print(" 15) wpisz 15 aby edytować rezerwację")
-    #print(" 16) wpisz 10 aby wyświetlić informacje o rezerwacjach")
+    print(" 12) wpisz 11 aby dodać nową rezerwację")
 
     print()
     try:
@@ -302,6 +311,7 @@ while True:
             case 9: menu9()
             case 10: menu10()
             case 11: menu11()
+            case 12: menu12()
             #case 14: menu14()
             #case 15: menu15()
             #case 16: menu16()
