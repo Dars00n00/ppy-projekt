@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from book import Book
 from borrowing import Borrowing
+from exceptions import WrongPersonParameterException, MultiplePersonErrorsException
 from person import Person
 from reservation import Reservation
 
@@ -60,16 +61,22 @@ def menu5():
     lname = input("Podaj nazwisko: ").strip()
     address = input("Podaj adres: ").strip()
     phone = input("Podaj numer telefonu: ").strip()
-    people.append(Person(fname=fname, lname=lname, address=address, phone=phone))
-    Person.save(people)
+    try:
+        p = Person(fname=fname, lname=lname, address=address, phone=phone)
+        people.append(p)
+        Person.save(people)
+    except MultiplePersonErrorsException as e:
+        print(str(e))
+    except WrongPersonParameterException as e:
+        print("błąd podczas dodawania nowego czytelnika -> " + str(e))
+    except Exception as e:
+        pass
 
 
 def menu6():
     people = Person.load()
-    #count = 1
     for count, person in enumerate(people, start=1):
         print(count,  ". ", person.id, person.fname, person.lname, person.address, person.phone)
-        #count += 1
     nr = int(input("Usuń czytelnika o numerze: "))
     del people[nr-1]
     Person.save(people)
@@ -77,10 +84,8 @@ def menu6():
 
 def menu7():
     people = Person.load()
-    #count = 1
     for count, person in enumerate(people, start=1):
         print(count, ". ", person.id, person.fname, person.lname, person.address, person.phone)
-        #count += 1
     nr = int(input("Edytuj czytelnika o numerze: "))
     fname = input("Podaj imie: ").strip()
     people[nr - 1].fname = fname
@@ -97,16 +102,14 @@ def menu8():
     people = Person.load()
     books = Book.load_books()
     borrowings = Borrowing.load()
-    revervations = Reservation.load_reservations()
+    reservations = Reservation.load_reservations()
 
-    count = 1
     for count, person in enumerate(people, start=1):
         print(count, ". ", person.id, person.fname, person.lname, person.address, person.phone)
-        #count += 1
     Person.display_stats()
     nr = int(input("Wyświetl informacjie o czytelniku o numerze: "))
     print("=========Rezerwacje=========")
-    for reservation in revervations:
+    for reservation in reservations:
         if people[nr - 1].id == reservation.person_id:
             for book in books:
                 if book.id == reservation.book_id:

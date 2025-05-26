@@ -1,4 +1,4 @@
-from exceptions import BookParameterException, EmptyBookParameterException
+from exceptions import WrongBookParameterException
 from borrowing import Borrowing
 import matplotlib
 matplotlib.use('TkAgg')
@@ -118,9 +118,9 @@ class Book(object):
     @title.setter
     def title(self, title):
         if title is None or not isinstance(title, str):
-            raise EmptyBookParameterException("title")
+            raise WrongBookParameterException("title", str(title))
         if len(title.strip()) <= 0:
-            raise BookParameterException("empty title field")
+            raise WrongBookParameterException("title", "brak")
         self._title = title.strip()
 
     @property
@@ -130,9 +130,9 @@ class Book(object):
     @author.setter
     def author(self, author):
         if author is None or not isinstance(author, str):
-            raise EmptyBookParameterException("author")
+            raise WrongBookParameterException("author", str(author))
         if len(author.strip()) <= 0:
-            raise BookParameterException("empty author field")
+            raise WrongBookParameterException("author", "brak")
         self._author = author.strip()
 
     @property
@@ -142,9 +142,9 @@ class Book(object):
     @isbn.setter
     def isbn(self, isbn):
         if isbn is None or not isinstance(isbn, str):
-            raise EmptyBookParameterException("isbn")
+            raise WrongBookParameterException("isbn", str(isbn))
         if len(isbn.strip()) <= 0:
-            raise BookParameterException("empty isbn field")
+            raise WrongBookParameterException("isbn", "brak")
         self._isbn = isbn.strip()
 
     @property
@@ -154,9 +154,9 @@ class Book(object):
     @publisher.setter
     def publisher(self, publisher):
         if publisher is None or not isinstance(publisher, str):
-            raise EmptyBookParameterException("publisher")
+            raise WrongBookParameterException("publisher")
         if len(publisher.strip()) <= 0:
-            raise BookParameterException("empty publisher field")
+            raise WrongBookParameterException("empty publisher field")
         self._publisher = publisher.strip()
 
     @property
@@ -168,9 +168,9 @@ class Book(object):
         try:
             pages = int(pages)
         except (ValueError, TypeError):
-            raise BookParameterException(f"wrong number ({pages}) of pages")
+            raise WrongBookParameterException(f"wrong number ({pages}) of pages")
         if pages <= 0:
-            raise BookParameterException(f"wrong number ({pages}) of pages")
+            raise WrongBookParameterException(f"wrong number ({pages}) of pages")
         self._pages = pages
 
     def __str__(self):

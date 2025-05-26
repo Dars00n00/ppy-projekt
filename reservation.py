@@ -1,5 +1,5 @@
 from book import Book
-from exceptions import EmptyReservationParameterException
+from exceptions import WrongReservationParameterException
 from datetime import date, datetime
 from person import Person
 
@@ -86,7 +86,7 @@ class Reservation:
     @id.setter
     def id(self, id: int):
         if id is None or not isinstance(id, int):
-            raise EmptyReservationParameterException("id")
+            raise WrongReservationParameterException("id", str(id))
         self._id = id
 
     @property
@@ -96,7 +96,7 @@ class Reservation:
     @person_id.setter
     def person_id(self, person_id: int):
         if person_id is None or not isinstance(person_id, int):
-            raise EmptyReservationParameterException("person_id")
+            raise WrongReservationParameterException("person_id", str(person_id))
         self._person_id = person_id
 
     @property
@@ -106,7 +106,7 @@ class Reservation:
     @book_id.setter
     def book_id(self, book_id: int):
         if book_id is None or not isinstance(book_id, int):
-            raise EmptyReservationParameterException("book_id")
+            raise WrongReservationParameterException("book_id", str(book_id))
         self._book_id = book_id
 
     @property
@@ -116,14 +116,14 @@ class Reservation:
     @begin_date.setter
     def begin_date(self, begin_date: str):
         if begin_date is None:
-            raise EmptyReservationParameterException("begin_date")
+            raise WrongReservationParameterException("begin_date", str(begin_date))
         if isinstance(begin_date, str):
             try:
                 begin_date = datetime.strptime(begin_date.strip(), "%Y-%m-%d").date()
             except ValueError:
-                raise EmptyReservationParameterException("begin_date (invalid format) (correct format='YYYY-MM-DD')")
+                raise WrongReservationParameterException("begin_date (invalid format) (correct format='YYYY-MM-DD')", str(begin_date))
         elif not isinstance(begin_date, date):
-            raise EmptyReservationParameterException("begin_date")
+            raise WrongReservationParameterException("begin_date", str(begin_date))
         self._begin_date = begin_date
 
     @property
@@ -133,14 +133,14 @@ class Reservation:
     @end_date.setter
     def end_date(self, end_date: str):
         if end_date is None:
-            raise EmptyReservationParameterException("end_date")
+            raise WrongReservationParameterException("end_date")
         if isinstance(end_date, str):
             try:
                 end_date = datetime.strptime(end_date.strip(), "%Y-%m-%d").date()
             except ValueError:
-                raise EmptyReservationParameterException("end_date (invalid format) (correct format='YYYY-MM-DD')")
+                raise WrongReservationParameterException("end_date (invalid format) (correct format='YYYY-MM-DD')", str(end_date))
         elif not isinstance(end_date, date):
-            raise EmptyReservationParameterException("end_date")
+            raise WrongReservationParameterException("end_date", str(end_date))
         self._end_date = end_date
 
     def __str__(self):
