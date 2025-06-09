@@ -81,8 +81,6 @@ def menu5():
         print(str(e))
     except WrongPersonParameterException as e:
         print("błąd podczas dodawania nowego czytelnika -> " + str(e))
-    except Exception as e:
-        pass
 
 
 def menu6():
@@ -143,6 +141,7 @@ def menu9():
     people = Person.load()
     books = Book.load_books()
     borrowings = Borrowing.load()
+    reservations = Reservation.load_reservations()
 
     count = 1
     for person in people:
@@ -151,7 +150,8 @@ def menu9():
     nr_czytelnika = int(input("Wypożycza czytelnik o numerze: ").strip())
 
     borrowed_book_ids = [b.id_book for b in borrowings if not b.returned]
-    available_books = [book for book in books if book.id not in borrowed_book_ids]
+    reserved_books_ids = [r.book_id for r in reservations if not r.person_id == people[nr_czytelnika-1].id]
+    available_books = [book for book in books if book.id not in borrowed_book_ids and book.id not in reserved_books_ids]
 
     count = 1
     for book in available_books:
@@ -252,8 +252,10 @@ def menu12():  # dodaj rezerwację
 
     books = Book.load_books()
     borrowings = Borrowing.load()
+    reservations = Reservation.load_reservations()
+    reserved_book_ids = [r.book_id for r in reservations]
     borrowed_book_ids = [b.id_book for b in borrowings if not b.returned and datetime.strptime(b.date_to, '%Y-%m-%d').date() > datetime.today().date()]
-    borrowed_books = [book for book in books if book.id in borrowed_book_ids]
+    borrowed_books = [book for book in books if book.id in borrowed_book_ids and book.id not in reserved_book_ids]
     books_ids = [book.id for book in borrowed_books]
     for borrowed_book in borrowed_books:
         print(borrowed_book, end="")
@@ -278,6 +280,11 @@ def menu12():  # dodaj rezerwację
         book_id=book_id,
         begin_date=parsedBegin.strftime("%Y-%m-%d"),
         end_date=pasrsedEnd.strftime("%Y-%m-%d"),)
+
+res = Reservation.load_reservations()
+for r in res:
+    if r.end_date > datetime.today():
+        Reservation.remove_reservation(r.id)
 
 while True:
     print("============System zarządzania biblioteką============")

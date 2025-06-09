@@ -25,7 +25,7 @@ class Person:
 
         plt.bar(names, counts, color='green')
         plt.xlabel("Dane czytelnika")
-        plt.ylabel("Częstotliwość wypożyczeń książek")
+        plt.ylabel("Liczba wypożyczeń książek")
         plt.xticks(rotation=90)
         plt.tight_layout()
         plt.show()
@@ -93,6 +93,7 @@ class Person:
                     next_id = int(parts[0]) + 1
         return next_id
 
+    next_id = loadId()
 
     def __init__(self, **kwargs):
         self.errors = []
